@@ -20,7 +20,7 @@ This module adds four more composition functions to the basic `Promise` Object:
 
 1. `aggregate` puts the results of a series of Promise into an aggregate object and passes it downstream as a single promise result.
 
-    ```
+    ``` node
         Promise.aggregate({
             cats: Promise.resolve(['Felix', 'Garfield']),
             dogs: Promise.resolve(['Rex', 'Lessie']),
@@ -34,7 +34,7 @@ This module adds four more composition functions to the basic `Promise` Object:
 
 2. `compose` like `aggregate`, but each item of the input must be a function returning a Promise. Results from previous promises will be passed down as parameters to successive functions:
 
-    ```
+    ``` node
         Promise.combine({
             cats: () => { return Promise.resolve(['Felix', 'Garfield'])),
             dogs: ({ cats }) => { return Promise.resolve(['Rex', 'Lessie']) },
@@ -49,7 +49,7 @@ This module adds four more composition functions to the basic `Promise` Object:
 
 3. `merge` merges the results of an array of promises into a single flat array:
 
-    ```
+    ``` node
         Promise.merge([
             Promise.resolve(['Felix', 'Garfield']),
             Promise.resolve(['Rex', 'Lessie']),
@@ -63,7 +63,7 @@ This module adds four more composition functions to the basic `Promise` Object:
 
 4. `reduce` accepts an array of functions returning promises and returns the result of the last promise in the array. Each promise result is passed as an argument to the next function in the array:
 
-    ```
+    ``` node
         Promise.reduce([
             () => { reutrn Promise.resolve(['Felix', 'Garfield']) },
             (cats) => { return Promise.resolve(['Rex', 'Lessie']) },
