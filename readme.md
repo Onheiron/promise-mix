@@ -28,7 +28,7 @@ This module adds four more composition functions to the basic `Promise` Object:
         fish: Promise.resolve('Nemo')
     })
     .then(({ cats, dogs, fish, turtle }) => {
-            // { cats, dogs, fish, turtle } = { cats: ['Felix', 'Garfield'], dogs: ['Rex', 'Lessie'], fish: 'Nemo', turtle: [] }
+        // { cats, dogs, fish, turtle } = { cats: ['Felix', 'Garfield'], dogs: ['Rex', 'Lessie'], fish: 'Nemo', turtle: [] }
     });
     ```
 
