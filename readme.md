@@ -10,9 +10,13 @@ This module contains some extension to default Node.js [Promise](https://www.pro
 
 To use the extensions, simply import the module in your script:
 
-`require('promise-mix');`
+```javascript
+require('promise-mix');
+```
 or
-`import 'promise-mix';`
+```javascript
+import 'promise-mix';
+```
 
 # Extensions
 
