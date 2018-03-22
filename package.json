@@ -14,5 +14,13 @@
     "merge"
   ],
   "author": "Onheiron",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Onheiron/promise-mix.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Onheiron/promise-mix/issues"
+  },
+  "homepage": "https://github.com/Onheiron/promise-mix#readme"
 }
