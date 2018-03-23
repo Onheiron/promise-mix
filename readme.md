@@ -26,45 +26,45 @@ Thus I decided to make some extension to the basic `Promise` library in order to
 For example, when having to return a structured JSON composed with the results of different `Promise` I'd usually just build a `Promise` chain like this:
 
 ```javascript
-    Promise.resolve('first promise result')
-        .then((res1) => {
-            return Promise.resolve('second promise result')
-                .then((res2) => {
-                    return { res1, res2 };
-                });
-        })
-        .then((res12) => {
-            return Promise.resolve('third promise result')
-                .then((res3) => {
-                    return {...res12, res3};
-                });
-        })
-        .then((output) => {
-            res.send(output)
-        }).catch(next);
-    /**
-     *  this would return to the caller:
-     * 
-     *      { 
-     *          res1: 'first promise result', 
-     *          res2: 'second promise result', 
-     *          res3: 'third promise result' 
-     *      }
-     * /
+Promise.resolve('first promise result')
+    .then((res1) => {
+        return Promise.resolve('second promise result')
+            .then((res2) => {
+                return { res1, res2 };
+            });
+    })
+    .then((res12) => {
+        return Promise.resolve('third promise result')
+            .then((res3) => {
+                return {...res12, res3};
+            });
+    })
+    .then((output) => {
+        res.send(output)
+    }).catch(next);
+/**
+ *  this would return to the caller:
+ * 
+ *      { 
+ *          res1: 'first promise result', 
+ *          res2: 'second promise result', 
+ *          res3: 'third promise result' 
+ *      }
+ * /
 ```
 
 With the `aggregate` extension, it'd be much more straight forward and clean to obtain the same result:
 
 ```javascript
-    Promise.aggregate({
-        res1: Promise.resolve('first promise result'),
-        res2: Promise.resolve('second promise result'),
-        res3: Promise.resolve('third promise result'),
-    })
-    .then((output) => {
-        res.send(output)
-    }).catch(next);
-    // this would return the same output as above.
+Promise.aggregate({
+    res1: Promise.resolve('first promise result'),
+    res2: Promise.resolve('second promise result'),
+    res3: Promise.resolve('third promise result'),
+})
+.then((output) => {
+    res.send(output)
+}).catch(next);
+// this would return the same output as above.
 ```
 
 Check out all the extensions for more useful combination methods.
