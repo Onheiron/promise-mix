@@ -176,11 +176,11 @@ Promise.reduce = (promiseFuncArray, init) => {
  *      // results = ['Rex', 'Lessie']
  *  });
  */
-Promise.fReduce = (promiseFuncArray, init) => {
+Promise.fReduce = (funcArray, init) => {
     let p = Promise.resolve(init || {});
-    for (let k in promiseFuncArray) {
+    for (let k in funcArray) {
         p = p.then((cumRes) => {
-            return util.promisify(promiseFuncArray[k])(cumRes)
+            return util.promisify(funcArray[k])(cumRes)
                 .then((res) => {
                     return Promise.resolve(res);
                 });

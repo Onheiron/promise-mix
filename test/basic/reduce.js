@@ -1,5 +1,5 @@
 'use strict';
-require('../promise-mix');
+require('../../index');
 const chai = require('chai')
     , should = chai.should();
 
