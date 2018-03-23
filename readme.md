@@ -78,3 +78,7 @@ This module adds four more composition functions to the basic `Promise` Object:
         // results = ['Rex', 'Lessie']
     });
     ```
+
+# Version History
+
+**1.0.X:** 

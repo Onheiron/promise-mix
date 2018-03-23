@@ -1,3 +1,4 @@
+const util = require('util');
 /**
  * Promise plugin aggregate(promiseMap).
  * 
@@ -27,8 +28,8 @@
  *      // err = 'Bird is the word!'
  *  });
  */
-Promise.aggregate = (promisesMap) => {
-    let p = Promise.resolve({});
+Promise.aggregate = (promisesMap, init) => {
+    let p = Promise.resolve(init || {});
     for (let k in promisesMap) {
         p = p.then((cumRes) => {
             return promisesMap[k]
@@ -57,11 +58,41 @@ Promise.aggregate = (promisesMap) => {
  *      // { cats, dogs, fish, turtle, everyone } = { cats: ['Felix', 'Garfield'], dogs: ['Rex', 'Lessie'], fish: 'Nemo', turtle: [], everyone: { cats: ['Felix', 'Garfield'], dogs: ['Rex', 'Lessie'], fish: 'Nemo', turtle: [] } }
  *  });
  */
-Promise.combine = (promiseFuncMap) => {
-    let p = Promise.resolve({});
+Promise.combine = (promiseFuncMap, init) => {
+    let p = Promise.resolve(init || {});
     for (let k in promiseFuncMap) {
         p = p.then((cumRes) => {
             return promiseFuncMap[k](cumRes)
+                .then((res) => {
+                    cumRes[k] = res;
+                    return Promise.resolve(cumRes);
+                });
+        });
+    }
+    return p;
+};
+
+/**
+ * Like above, but values of the map are simple function which will be automatically converted to return promises.
+ * 
+ * Examples:
+ * 
+ *  Promise.fCombine({
+ *      cats: ({ humans }, done) => { done(null, ['Felix', 'Garfield']) },
+ *      dogs: ({ cats }, done) => { done(null, ['Rex', 'Lessie']) },
+ *      turtles: ({ cats, dogs }, done) => { done(null, []) },
+ *      fish: ({ cats, dogs, turtle }, done) => { done(null, 'Nemo') },
+ *      everyone: ({ cats, dogs, turtle, fish }, done) => { done(null, { cats, dogs, turtle, fish }) }
+ *  }, { homans: ['John'] })
+ *  .then(({ humans, cats, dogs, fish, turtle, everyone }) => {
+ *      // { humans, cats, dogs, fish, turtle, everyone } = { humans: ['John'], cats: ['Felix', 'Garfield'], dogs: ['Rex', 'Lessie'], fish: 'Nemo', turtle: [], everyone: { cats: ['Felix', 'Garfield'], dogs: ['Rex', 'Lessie'], fish: 'Nemo', turtle: [] } }
+ *  });
+ */
+Promise.fCombine = (funcMap, init) => {
+    let p = Promise.resolve(init || {});
+    for (let k in funcMap) {
+        p = p.then((cumRes) => {
+            return util.promisify(funcMap[k])(cumRes)
                 .then((res) => {
                     cumRes[k] = res;
                     return Promise.resolve(cumRes);
@@ -86,8 +117,8 @@ Promise.combine = (promiseFuncMap) => {
  *      // results = ['Felix', 'Garfield', 'Rex', 'Lessie', 'Nemo']
  *  });
  */
-Promise.merge = (promisesToMerge) => {
-    let p = Promise.resolve([]);
+Promise.merge = (promisesToMerge, init) => {
+    let p = Promise.resolve(init || []);
     for (let k in promisesToMerge) {
         p = p.then((cumRes) => {
             return promisesToMerge[k]
@@ -116,11 +147,40 @@ Promise.merge = (promisesToMerge) => {
  *      // results = ['Rex', 'Lessie']
  *  });
  */
-Promise.reduce = (promiseFuncArray) => {
-    let p = Promise.resolve({});
+Promise.reduce = (promiseFuncArray, init) => {
+    let p = Promise.resolve(init || {});
     for (let k in promiseFuncArray) {
         p = p.then((cumRes) => {
             return promiseFuncArray[k](cumRes)
+                .then((res) => {
+                    return Promise.resolve(res);
+                });
+        });
+    }
+    return p;
+};
+
+/**
+ * Sequentially executes an array of functions (after automatically converting them to return promises) passing on the previous promise's results.
+ * Finally returns the results of the last created Promise.
+ * 
+ * Examples:
+ * 
+ *  Promise.fReduce([
+ *      (humans, done) => { done(null, ['Felix', 'Garfield']) },
+ *      (cats, done) => { done(null, ['Rex', 'Lessie']) },
+ *      (dogs, done) => { done(null, dogs) },
+ *      (turtles, done) => { done(null, turtles) }
+ *  ], 'John')
+ *  .then((results) => {
+ *      // results = ['Rex', 'Lessie']
+ *  });
+ */
+Promise.fReduce = (promiseFuncArray, init) => {
+    let p = Promise.resolve(init || {});
+    for (let k in promiseFuncArray) {
+        p = p.then((cumRes) => {
+            return util.promisify(promiseFuncArray[k])(cumRes)
                 .then((res) => {
                     return Promise.resolve(res);
                 });
