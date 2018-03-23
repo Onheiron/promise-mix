@@ -109,7 +109,7 @@ This module adds four more composition functions to the basic `Promise` Object:
         Promise.resolve(['Felix', 'Garfield']),
         Promise.resolve(['Rex', 'Lessie']),
         Promise.resolve([]),
-        Promise.resolve('Nemo')
+        Promise.resolve(['Nemo'])
     ])
     .then((results) => {
         // results = ['Felix', 'Garfield', 'Rex', 'Lessie', 'Nemo']
