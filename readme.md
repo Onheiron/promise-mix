@@ -81,4 +81,10 @@ This module adds four more composition functions to the basic `Promise` Object:
 
 # Version History
 
-**1.0.X:** 
+**1.0.X:** First version with few patches, final patch `1.0.7`
+
+**1.1.X:** New Features:
+
+  1. `fCombine` and `fReduce` which behave like `combine` and `reduce`, but make use of functions in the format `(pars, callback(err, val))` instead of functions returning promises. This helps integrate async library functions that make use of callbacks instead of Promises.
+
+  2. All functions now accept a second parameter which will be used as initial value for the sequence. See tests and documentation for some example.
