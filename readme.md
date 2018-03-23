@@ -81,14 +81,14 @@ This module adds four more composition functions to the basic `Promise` Object:
 
 # Version History
 
-**1.0.X:** First version with few patches, final patch `1.0.7`
+**1.0.X:** First version with few patches, final patch `1.0.7`.
 
 **1.1.X:** New Features:
 
-  1. `fCombine` and `fReduce` which behave like `combine` and `reduce`, but make use of functions in the format `(pars, callback(err, val))` instead of functions returning promises. This helps integrate async library functions that make use of callbacks instead of Promises.
+1. `fCombine` and `fReduce` which behave like `combine` and `reduce`, but make use of functions in the format `(pars, callback(err, val))` instead of functions returning promises. This helps integrate async library functions that make use of callbacks instead of Promises.
 
-  2. All functions now accept a second parameter which will be used as initial value for the sequence. See tests and documentation for some example.
+2. All functions now accept a second parameter which will be used as initial value for the sequence. See tests and documentation for some example.
 
 **1.2.X:** New Features:
 
-  1. Extensions can now be concatenated with instance-specific functions: `_aggregate`, `_combine`, `_fCombine`, `_merge`, `_reduce`, `_fReduce`. These concatenation functions help switch composition context and structure on the go, but might end up confusing as for the value passed downstream. See tests for some working examples.
+Extensions can now be concatenated with instance-specific functions: `_aggregate`, `_combine`, `_fCombine`, `_merge`, `_reduce`, `_fReduce`. These concatenation functions help switch composition context and structure on the go, but might end up confusing as for the value passed downstream. See tests for some working examples.
