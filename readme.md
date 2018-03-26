@@ -143,3 +143,9 @@ This module adds four more composition functions to the basic `Promise` Object:
 **1.2.X:** New Features:
 
 Extensions can now be concatenated with instance-specific functions: `_aggregate`, `_combine`, `_fCombine`, `_merge`, `_reduce`, `_fReduce`. These concatenation functions help switch composition context and structure on the go, but might end up confusing as for the value passed downstream. See tests for some working examples.
+
+**1.3.X:** New Features:
+
+1. Added `dev` warnings and errors for concatenation special cases: `_aggregate` and `_combine` will have non-object donwstreams assigned to an `_init` variable in the aggregation object.
+
+2. Added `mux` and `deMux` functionality to mix several promises from an array or an object of inputs as if it were one. See tests for some cool example!
