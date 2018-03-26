@@ -10,7 +10,7 @@ describe('Test promise concatenation', () => {
             step1: (init, done) => done(null, 'step1'),
             step2: (step1Result, done) => done(null, 'step2')
         }, { init: 'init' })._combine({
-            step3: ({ step2Result }) => { return Promise.resolve('step3') }
+            step3: () => { return Promise.resolve('step3'); }
         })._fCombine({
             step4: (step3Result, done) => done(null, 'step4')
         }).then((data) => {
@@ -41,7 +41,7 @@ describe('Test promise concatenation', () => {
             should.exist(data.step3);
             should.exist(data.step3.step2);
             should.exist(data.step4);
-        })
+        });
     });
 
     it('concat array remix!', () => {
@@ -49,13 +49,13 @@ describe('Test promise concatenation', () => {
             Promise.resolve(['step1'])
         ], ['init'])._reduce([
             (step1) => {
-                step1.push('step2')
+                step1.push('step2');
                 return Promise.resolve(step1);
             }
         ])._fReduce([
             (step2, done) => {
-                step2.push('step3')
-                done(null, step2 )
+                step2.push('step3');
+                done(null, step2 );
             }
         ])._merge([
             Promise.resolve(['step4'])
@@ -65,6 +65,6 @@ describe('Test promise concatenation', () => {
             data.indexOf('step1').should.equal(1);
             data.indexOf('step2').should.equal(2);
             data.indexOf('step3').should.equal(3);
-        })
+        });
     });
 });

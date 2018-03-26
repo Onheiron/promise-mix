@@ -1,17 +1,17 @@
-'use strict';
+"use strict";
 
-const env = process.env.NODE_ENV || 'dev';
-const util = require('util');
+const env = process.env.NODE_ENV || "dev";
+const util = require("util");
 
 const checkNonObjectInit = (init, funcName) => {
-    if (init && !util.isObject(init)) {
-        if (env == 'dev') {
-            process.emitWarning(`'${funcName}' called with non-object init value, that value will be assigned to an '_init' field in the output object.`);
+    if (init && !(init instanceof Object)) {
+        if (env == "dev") {
+            process.emitWarning(`"${funcName}" called with non-object init value, that value will be assigned to an "_init" field in the output object.`);
         }
         return { _init: init };
     }
     return init;
-}
+};
 
 /**
  * Promise plugin aggregate(promiseMap).
@@ -22,28 +22,28 @@ const checkNonObjectInit = (init, funcName) => {
  * Examples:
  * 
  *  Promise.aggregate({
- *      cats: Promise.resolve(['Felix', 'Garfield']),
- *      dogs: Promise.resolve(['Rex', 'Lessie']),
+ *      cats: Promise.resolve(["Felix", "Garfield"]),
+ *      dogs: Promise.resolve(["Rex", "Lessie"]),
  *      turtles: Promise.resolve([]),
- *      fish: Promise.resolve('Nemo')
+ *      fish: Promise.resolve("Nemo")
  *  })
  *  .then(({ cats, dogs, fish, turtle }) => {
- *      // { cats, dogs, fish, turtle } = { cats: ['Felix', 'Garfield'], dogs: ['Rex', 'Lessie'], fish: 'Nemo', turtle: [] }
+ *      // { cats, dogs, fish, turtle } = { cats: ["Felix", "Garfield"], dogs: ["Rex", "Lessie"], fish: "Nemo", turtle: [] }
  *  });
  * 
  *  Promise.aggregate({
- *      cats: Promise.resolve(['Felix', 'Garfield']),
- *      dogs: Promise.resolve(['Rex', 'Lessie']),
+ *      cats: Promise.resolve(["Felix", "Garfield"]),
+ *      dogs: Promise.resolve(["Rex", "Lessie"]),
  *      turtles: Promise.resolve([]),
- *      fish: Promise.resolve('Nemo'),
- *      birds: Promise.reject('Bird is the word!')
+ *      fish: Promise.resolve("Nemo"),
+ *      birds: Promise.reject("Bird is the word!")
  *  })
  *  .catch((err) => {
- *      // err = 'Bird is the word!'
+ *      // err = "Bird is the word!"
  *  });
  */
 Promise.aggregate = (promisesMap, init) => {
-    init = checkNonObjectInit(init, 'aggregate');
+    init = checkNonObjectInit(init, "aggregate");
     let p = Promise.resolve(init || {});
     for (let k in promisesMap) {
         p = p.then((cumRes) => {
@@ -63,18 +63,18 @@ Promise.aggregate = (promisesMap, init) => {
  * Examples:
  * 
  *  Promise.combine({
- *      cats: () => { return Promise.resolve(['Felix', 'Garfield'])),
- *      dogs: ({ cats }) => { return Promise.resolve(['Rex', 'Lessie']) },
+ *      cats: () => { return Promise.resolve(["Felix", "Garfield"])),
+ *      dogs: ({ cats }) => { return Promise.resolve(["Rex", "Lessie"]) },
  *      turtles: ({ cats, dogs }) => { return Promise.resolve([]) },
- *      fish: ({ cats, dogs, turtle }) => { return Promise.resolve('Nemo') },
+ *      fish: ({ cats, dogs, turtle }) => { return Promise.resolve("Nemo") },
  *      everyone: ({ cats, dogs, turtle, fish }) => { return Promise.resolve({ cats, dogs, turtle, fish }) }
  *  })
  *  .then(({ cats, dogs, fish, turtle, everyone }) => {
- *      // { cats, dogs, fish, turtle, everyone } = { cats: ['Felix', 'Garfield'], dogs: ['Rex', 'Lessie'], fish: 'Nemo', turtle: [], everyone: { cats: ['Felix', 'Garfield'], dogs: ['Rex', 'Lessie'], fish: 'Nemo', turtle: [] } }
+ *      // { cats, dogs, fish, turtle, everyone } = { cats: ["Felix", "Garfield"], dogs: ["Rex", "Lessie"], fish: "Nemo", turtle: [], everyone: { cats: ["Felix", "Garfield"], dogs: ["Rex", "Lessie"], fish: "Nemo", turtle: [] } }
  *  });
  */
 Promise.combine = (promiseFuncMap, init) => {
-    init = checkNonObjectInit(init, 'combine');
+    init = checkNonObjectInit(init, "combine");
     let p = Promise.resolve(init || {});
     for (let k in promiseFuncMap) {
         p = p.then((cumRes) => {
@@ -94,18 +94,18 @@ Promise.combine = (promiseFuncMap, init) => {
  * Examples:
  * 
  *  Promise.fCombine({
- *      cats: ({ humans }, done) => { done(null, ['Felix', 'Garfield']) },
- *      dogs: ({ cats }, done) => { done(null, ['Rex', 'Lessie']) },
+ *      cats: ({ humans }, done) => { done(null, ["Felix", "Garfield"]) },
+ *      dogs: ({ cats }, done) => { done(null, ["Rex", "Lessie"]) },
  *      turtles: ({ cats, dogs }, done) => { done(null, []) },
- *      fish: ({ cats, dogs, turtle }, done) => { done(null, 'Nemo') },
+ *      fish: ({ cats, dogs, turtle }, done) => { done(null, "Nemo") },
  *      everyone: ({ cats, dogs, turtle, fish }, done) => { done(null, { cats, dogs, turtle, fish }) }
- *  }, { homans: ['John'] })
+ *  }, { homans: ["John"] })
  *  .then(({ humans, cats, dogs, fish, turtle, everyone }) => {
- *      // { humans, cats, dogs, fish, turtle, everyone } = { humans: ['John'], cats: ['Felix', 'Garfield'], dogs: ['Rex', 'Lessie'], fish: 'Nemo', turtle: [], everyone: { cats: ['Felix', 'Garfield'], dogs: ['Rex', 'Lessie'], fish: 'Nemo', turtle: [] } }
+ *      // { humans, cats, dogs, fish, turtle, everyone } = { humans: ["John"], cats: ["Felix", "Garfield"], dogs: ["Rex", "Lessie"], fish: "Nemo", turtle: [], everyone: { cats: ["Felix", "Garfield"], dogs: ["Rex", "Lessie"], fish: "Nemo", turtle: [] } }
  *  });
  */
 Promise.fCombine = (funcMap, init) => {
-    init = checkNonObjectInit(init, 'fCombine');
+    init = checkNonObjectInit(init, "fCombine");
     let p = Promise.resolve(init || {});
     for (let k in funcMap) {
         p = p.then((cumRes) => {
@@ -125,23 +125,23 @@ Promise.fCombine = (funcMap, init) => {
  * Examples:
  * 
  *  Promise.merge([
- *      Promise.resolve(['Felix', 'Garfield']),
- *      Promise.resolve(['Rex', 'Lessie']),
+ *      Promise.resolve(["Felix", "Garfield"]),
+ *      Promise.resolve(["Rex", "Lessie"]),
  *      Promise.resolve([]),
- *      Promise.resolve('Nemo')
+ *      Promise.resolve("Nemo")
  *  ])
  *  .then((results) => {
- *      // results = ['Felix', 'Garfield', 'Rex', 'Lessie', 'Nemo']
+ *      // results = ["Felix", "Garfield", "Rex", "Lessie", "Nemo"]
  *  });
  */
 Promise.merge = (promisesToMerge, init) => {
-    if (init && !util.isArray(init)) init = [init];
+    if (init && !Array.isArray(init)) init = [init];
     let p = Promise.resolve(init || []);
     for (let k in promisesToMerge) {
         p = p.then((cumRes) => {
             return promisesToMerge[k]
                 .then((res) => {
-                    if(!util.isArray(res)) res = [res];
+                    if (!Array.isArray(res)) res = [res];
                     Array.prototype.push.apply(cumRes, res);
                     return Promise.resolve(cumRes);
                 });
@@ -151,19 +151,19 @@ Promise.merge = (promisesToMerge, init) => {
 };
 
 /**
- * Sequentially executes an array of functions returning a Promise passing on the previous promise's results.
+ * Sequentially executes an array of functions returning a Promise passing on the previous promise"s results.
  * Finally returns the results of the last created Promise.
  * 
  * Examples:
  * 
  *  Promise.reduce([
- *      () => { reutrn Promise.resolve(['Felix', 'Garfield']) },
- *      (cats) => { return Promise.resolve(['Rex', 'Lessie']) },
+ *      () => { reutrn Promise.resolve(["Felix", "Garfield"]) },
+ *      (cats) => { return Promise.resolve(["Rex", "Lessie"]) },
  *      (dogs) => { return Promise.resolve(dogs) },
  *      (turtles) => { return Promise.resolve(turtles) }
  *  ])
  *  .then((results) => {
- *      // results = ['Rex', 'Lessie']
+ *      // results = ["Rex", "Lessie"]
  *  });
  */
 Promise.reduce = (promiseFuncArray, init) => {
@@ -180,19 +180,19 @@ Promise.reduce = (promiseFuncArray, init) => {
 };
 
 /**
- * Sequentially executes an array of functions (after automatically converting them to return promises) passing on the previous promise's results.
+ * Sequentially executes an array of functions (after automatically converting them to return promises) passing on the previous promise"s results.
  * Finally returns the results of the last created Promise.
  * 
  * Examples:
  * 
  *  Promise.fReduce([
- *      (humans, done) => { done(null, ['Felix', 'Garfield']) },
- *      (cats, done) => { done(null, ['Rex', 'Lessie']) },
+ *      (humans, done) => { done(null, ["Felix", "Garfield"]) },
+ *      (cats, done) => { done(null, ["Rex", "Lessie"]) },
  *      (dogs, done) => { done(null, dogs) },
  *      (turtles, done) => { done(null, turtles) }
- *  ], 'John')
+ *  ], "John")
  *  .then((results) => {
- *      // results = ['Rex', 'Lessie']
+ *      // results = ["Rex", "Lessie"]
  *  });
  */
 Promise.fReduce = (funcArray, init) => {

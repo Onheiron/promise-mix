@@ -1,7 +1,6 @@
-'use strict';
+"use strict";
 
-require('./promise-mix-concat');
-const util = require('util');
+require("./promise-mix-concat");
 
 /**
  * This section contains more Promise extensions with methods to handle several Promises simultaneously.
@@ -10,11 +9,11 @@ const util = require('util');
 const PromiseMux = function (inputs) {
 
     this.init = function (inits) {
-        if (util.isArray(inits)) {
+        if (Array.isArray(inits)) {
             this.pool = inits.map((init) => {
                 return Promise.resolve(init);
             });
-        } else if (util.isObject(inits)) {
+        } else if (inits instanceof Object) {
             this.pool = {};
             for (let i in inits) {
                 const init = inits[i];
@@ -23,7 +22,7 @@ const PromiseMux = function (inputs) {
         } else {
             throw TypeError(`PromiseMux input must be an object or an array. Current input type is ${typeof inits}`);
         }
-    }
+    };
 
     if (inputs) this.init(inputs);
 
@@ -36,7 +35,7 @@ const PromiseMux = function (inputs) {
     };
 
     this.deMux = function (func) {
-        if (util.isArray(inputs)) {
+        if (Array.isArray(inputs)) {
             return Promise.all(this.pool).then(func);
         } else {
             return Promise.aggregate(this.pool).then(func);
@@ -46,7 +45,7 @@ const PromiseMux = function (inputs) {
 
 Promise.mux = (inputs) => {
     return new PromiseMux(inputs);
-}
+};
 
 PromiseMux.aggregate = (promisesMap, inputs) => {
     const promiseMux = new PromiseMux(inputs);
@@ -106,41 +105,41 @@ Promise.prototype._mux = function (func) {
     return this.then((results) => {
         return func(new PromiseMux(results));
     });
-}
+};
 
 PromiseMux.prototype._aggregate = function (promisesMap) {
     return this.then((prev) => {
-        return Promise.aggregate(promisesMap, prev)
+        return Promise.aggregate(promisesMap, prev);
     });
 };
 
 PromiseMux.prototype._combine = function (promiseFuncMap) {
     return this.then((prev) => {
-        return Promise.combine(promiseFuncMap, prev)
+        return Promise.combine(promiseFuncMap, prev);
     });
 };
 
 PromiseMux.prototype._fCombine = function (funcMap) {
     return this.then((prev) => {
-        return Promise.fCombine(funcMap, prev)
+        return Promise.fCombine(funcMap, prev);
     });
 };
 
 PromiseMux.prototype._merge = function (promisesToMerge) {
     return this.then((prev) => {
-        return Promise.merge(promisesToMerge, prev)
+        return Promise.merge(promisesToMerge, prev);
     });
 };
 
 PromiseMux.prototype._reduce = function (promiseFuncArray) {
     return this.then((prev) => {
-        return Promise.reduce(promiseFuncArray, prev)
+        return Promise.reduce(promiseFuncArray, prev);
     });
 };
 
 PromiseMux.prototype._fReduce = function (funcArray) {
     return this.then((prev) => {
-        return Promise.fReduce(funcArray, prev)
+        return Promise.fReduce(funcArray, prev);
     });
 };
 
