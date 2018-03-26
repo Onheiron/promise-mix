@@ -1,7 +1,10 @@
+'use strict';
+
 require('./promise-mix');
+const util = require('util');
 
 /**
- * This section contains more Promise extensions with methods derived by composing basic promise-mix methods.
+ * This section contains more Promise extensions with methods to concatenate promises using the base extensions.
  */
 
 Promise.prototype._aggregate = function (promisesMap) {

@@ -61,6 +61,23 @@ describe('Test combine function', () => {
             })
     });
 
+    it('should create combined data with non-obbject initial value', () => {
+        return Promise.combine({
+            posts: ({ _init }) => { // retrieve its posts
+                should.exist(_init)
+                return Promise.resolve(userPosts.filter((item) => {
+                    return item.author == _init;
+                }))
+            }
+        }, 'dumbass').then(({ _init, posts }) => {
+                should.exist(_init);
+                should.exist(posts);
+                _init.should.equal('dumbass');
+                posts[0].text.should.equal('YOLO!!!');
+                posts.length.should.equal(1);
+            })
+    });
+
     it('should create combined data from "promisified" functions', () => {
         return Promise.fCombine({
             user: (val, done) => { // select an user

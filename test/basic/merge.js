@@ -64,15 +64,13 @@ describe('Test merge function', () => {
         return Promise.merge([
             Promise.resolve(userLocalPosts),
             Promise.resolve(userRemotePosts)
-        ], [
-            {
+        ], {
                 text: 'E = mc^2'
-            }
-        ]).then((posts) => {
-            should.exist(posts);
-            posts[0].text.should.equal('E = mc^2');
-            posts.length.should.equal(5);
-        })
+            }).then((posts) => {
+                should.exist(posts);
+                posts[0].text.should.equal('E = mc^2');
+                posts.length.should.equal(5);
+            })
     });
 
     it('should create nested merged data', () => {

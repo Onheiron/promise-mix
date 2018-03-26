@@ -1,4 +1,18 @@
+'use strict';
+
+const env = process.env.NODE_ENV || 'dev';
 const util = require('util');
+
+const checkNonObjectInit = (init, funcName) => {
+    if (init && !util.isObject(init)) {
+        if (env == 'dev') {
+            process.emitWarning(`'${funcName}' called with non-object init value, that value will be assigned to an '_init' field in the output object.`);
+        }
+        return { _init: init };
+    }
+    return init;
+}
+
 /**
  * Promise plugin aggregate(promiseMap).
  * 
@@ -29,6 +43,7 @@ const util = require('util');
  *  });
  */
 Promise.aggregate = (promisesMap, init) => {
+    init = checkNonObjectInit(init, 'aggregate');
     let p = Promise.resolve(init || {});
     for (let k in promisesMap) {
         p = p.then((cumRes) => {
@@ -59,6 +74,7 @@ Promise.aggregate = (promisesMap, init) => {
  *  });
  */
 Promise.combine = (promiseFuncMap, init) => {
+    init = checkNonObjectInit(init, 'combine');
     let p = Promise.resolve(init || {});
     for (let k in promiseFuncMap) {
         p = p.then((cumRes) => {
@@ -89,6 +105,7 @@ Promise.combine = (promiseFuncMap, init) => {
  *  });
  */
 Promise.fCombine = (funcMap, init) => {
+    init = checkNonObjectInit(init, 'fCombine');
     let p = Promise.resolve(init || {});
     for (let k in funcMap) {
         p = p.then((cumRes) => {
@@ -118,11 +135,13 @@ Promise.fCombine = (funcMap, init) => {
  *  });
  */
 Promise.merge = (promisesToMerge, init) => {
+    if (init && !util.isArray(init)) init = [init];
     let p = Promise.resolve(init || []);
     for (let k in promisesToMerge) {
         p = p.then((cumRes) => {
             return promisesToMerge[k]
                 .then((res) => {
+                    if(!util.isArray(res)) res = [res];
                     Array.prototype.push.apply(cumRes, res);
                     return Promise.resolve(cumRes);
                 });

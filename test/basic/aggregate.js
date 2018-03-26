@@ -35,6 +35,21 @@ describe('Test aggregate function', () => {
             })
     });
 
+    it('should create aggregate data with non-object initial value', () => {
+        return Promise.aggregate({
+            artist: Promise.resolve('Johnny Cash'),
+            songs: Promise.resolve(['Walk The Line', 'Ring of Fire', 'Folsom Prison Blues'])
+        }, 'Your user name').then(({ _init, artist, songs }) => {
+            should.exist(_init);
+            should.exist(artist);
+            should.exist(songs);
+            _init.should.equal('Your user name')
+            artist.should.equal('Johnny Cash');
+            songs[0].should.equal('Walk The Line');
+            songs.length.should.equal(3);
+        })
+    });
+
     it('should create nested aggregate data', () => {
         return Promise.aggregate({
             artist: Promise.resolve('Johnny Cash'),
