@@ -60,7 +60,7 @@ describe("Test promise explosion", () => {
             (step1, done) => done(null, step1 * 2),
             (step2, done) => done(null, step2 / 3)
         ], [2, 5, 8]).then((result) => {
-            return Promise.resolve(`Result is ${result}`);
+            return `Result is ${result}`;
         }).deMux((reports) => {
             should.exist(reports);
             reports.length.should.equal(3);
@@ -78,7 +78,7 @@ describe("Test promise explosion", () => {
                 normal: 5,
                 hard: 8
             }).then((result) => {
-                return Promise.resolve(`Result is ${result}`);
+                return `Result is ${result}`;
             }).deMux((reports) => {
                 should.exist(reports);
                 should.exist(reports.easy);
@@ -114,7 +114,7 @@ describe("Test promise explosion", () => {
                                 })));
                             }
                         ]).deMux((posts) => { // merge the results, then flatten the array of all posts.
-                            return Promise.resolve([].concat.apply([], posts));
+                            return [].concat.apply([], posts);
                         });
                 }
             }).deMux((results) => {
@@ -125,7 +125,7 @@ describe("Test promise explosion", () => {
                 // now let's merge all posts in a single array
                 let allPosts = results[0].posts;
                 allPosts = allPosts.concat(results[1].posts);
-                return Promise.resolve(allPosts);
+                return allPosts;
             })._mux((mux) => { // handle muxed data
                 return mux._reduce([ // for each post
                     (post) => { // retrieve post author
@@ -139,9 +139,7 @@ describe("Test promise explosion", () => {
                     ({ user, post }) => { // format post feed
                         return Promise.resolve(`${user.name} said: "${post.text}"`);
                     }
-                ]).deMux((feeds) => { // demux and downstream demuxed data
-                    return Promise.resolve(feeds);
-                });
+                ]).deMux();
             })
             .then((feeds) => { // here we have demuxed data.
                 feeds.indexOf("Dumb Ass said: \"YOLO!!!\"").should.equal(0);

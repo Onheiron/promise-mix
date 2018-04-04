@@ -8,19 +8,16 @@ require("./promise-mix-concat");
 
 const PromiseMux = function (inputs) {
 
-    this.init = function (inits) {
-        if (Array.isArray(inits)) {
-            this.pool = inits.map((init) => {
-                return Promise.resolve(init);
-            });
-        } else if (inits instanceof Object) {
+    this.init = function (inputs) {
+        if (Array.isArray(inputs)) {
+            this.pool = [];
+        } else if (inputs instanceof Object) {
             this.pool = {};
-            for (let i in inits) {
-                const init = inits[i];
-                this.pool[i] = Promise.resolve(init);
-            }
         } else {
             throw TypeError(`PromiseMux input must be an object or an array. Current input type is ${typeof inits}`);
+        }
+        for (let i in inputs) {
+            this.pool[i] = Promise.resolve(inputs[i]);
         }
     };
 
@@ -28,18 +25,22 @@ const PromiseMux = function (inputs) {
 
     this.then = function (func) {
         for (let p in this.pool) {
-            const promise = this.pool[p];
-            this.pool[p] = promise.then(func);
+            this.pool[p] = this.pool[p].then(func);
         }
         return this;
     };
 
     this.deMux = function (func) {
+        let output;
         if (Array.isArray(inputs)) {
-            return Promise.all(this.pool).then(func);
+            output = Promise.all(this.pool);
         } else {
-            return Promise.aggregate(this.pool).then(func);
+            output = Promise.aggregate(this.pool);
         }
+        if (func) {
+            output = output.then(func);
+        }
+        return output;
     };
 };
 
@@ -50,8 +51,7 @@ Promise.mux = (inputs) => {
 PromiseMux.aggregate = (promisesMap, inputs) => {
     const promiseMux = new PromiseMux(inputs);
     for (let p in promiseMux.pool) {
-        const promise = promiseMux.pool[p];
-        promiseMux.pool[p] = promise._aggregate(promisesMap);
+        promiseMux.pool[p] = promiseMux.pool[p]._aggregate(promisesMap);
     }
     return promiseMux;
 };
@@ -59,8 +59,7 @@ PromiseMux.aggregate = (promisesMap, inputs) => {
 PromiseMux.combine = (promiseFuncMap, inputs) => {
     const promiseMux = new PromiseMux(inputs);
     for (let p in promiseMux.pool) {
-        const promise = promiseMux.pool[p];
-        promiseMux.pool[p] = promise._combine(promiseFuncMap);
+        promiseMux.pool[p] = promiseMux.pool[p]._combine(promiseFuncMap);
     }
     return promiseMux;
 };
@@ -68,8 +67,7 @@ PromiseMux.combine = (promiseFuncMap, inputs) => {
 PromiseMux.fCombine = (funcMap, inputs) => {
     const promiseMux = new PromiseMux(inputs);
     for (let p in promiseMux.pool) {
-        const promise = promiseMux.pool[p];
-        promiseMux.pool[p] = promise._fCombine(funcMap);
+        promiseMux.pool[p] = promiseMux.pool[p]._fCombine(funcMap);
     }
     return promiseMux;
 };
@@ -77,8 +75,7 @@ PromiseMux.fCombine = (funcMap, inputs) => {
 PromiseMux.merge = (promisesToMerge, inputs) => {
     const promiseMux = new PromiseMux(inputs);
     for (let p in promiseMux.pool) {
-        const promise = promiseMux.pool[p];
-        promiseMux.pool[p] = promise._merge(promisesToMerge);
+        promiseMux.pool[p] = promiseMux.pool[p]._merge(promisesToMerge);
     }
     return promiseMux;
 };
@@ -86,8 +83,7 @@ PromiseMux.merge = (promisesToMerge, inputs) => {
 PromiseMux.reduce = (promiseFuncArray, inputs) => {
     const promiseMux = new PromiseMux(inputs);
     for (let p in promiseMux.pool) {
-        const promise = promiseMux.pool[p];
-        promiseMux.pool[p] = promise._reduce(promiseFuncArray);
+        promiseMux.pool[p] = promiseMux.pool[p]._reduce(promiseFuncArray);
     }
     return promiseMux;
 };
@@ -95,8 +91,7 @@ PromiseMux.reduce = (promiseFuncArray, inputs) => {
 PromiseMux.fReduce = (funcArray, inputs) => {
     const promiseMux = new PromiseMux(inputs);
     for (let p in promiseMux.pool) {
-        const promise = promiseMux.pool[p];
-        promiseMux.pool[p] = promise._fReduce(funcArray);
+        promiseMux.pool[p] = promiseMux.pool[p]._fReduce(funcArray);
     }
     return promiseMux;
 };
