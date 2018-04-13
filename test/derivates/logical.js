@@ -59,6 +59,53 @@ describe('Test promise logical operations', () => {
             ], res => res.length > 3);
         }).then(result => {
             result.should.equal('Andy');
+            return Promise.resolve();
+        });
+    });
+
+    it('should chain OR operations.', () => {
+        return Promise.resolve('Andy')._or([
+            () => Promise.resolve('Sandy'),
+            () => Promise.resolve('Wendy')
+        ]).then(result => {
+            result.should.equal('Andy');
+            return Promise.resolve()._or([
+                () => Promise.resolve(),
+                () => Promise.resolve('Wendy')
+            ]);
+        }).then(result => {
+            result.should.equal('Wendy');
+            return Promise.resolve('Andy')._or([
+                () => Promise.reject('Sandy'),
+                () => Promise.resolve('Wendy')
+            ]);
+        }).then(result => {
+            result.should.equal('Andy');
+            return Promise.or([
+                () => Promise.resolve('Andy'),
+                () => Promise.resolve('Sandy')
+            ])._or([
+                () => Promise.resolve('Wendy'),
+                () => Promise.resolve('Sally')
+            ], res => res.length > 4);
+        }).then(result => {
+            result.should.equal('Wendy');
+            return Promise.or([
+                () => Promise.resolve('Andy'),
+                () => Promise.resolve('Sandy')
+            ])._or([
+                () => Promise.resolve('Wendy'),
+                () => Promise.resolve('Sally')
+            ], res => res.length > 3);
+        }).then(result => {
+            result.should.equal('Andy');
+            return Promise.resolve()._or([
+                () => Promise.resolve(),
+                () => Promise.resolve()
+            ]);
+        }).catch(err => {
+            should.exist(err);
+            return Promise.resolve();
         });
     });
 
@@ -97,6 +144,7 @@ describe('Test promise logical operations', () => {
         }).catch(err => {
             should.exist(err);
             err.should.equal('Some Promise checked false.');
+            return Promise.resolve();
         });
     });
 
@@ -156,6 +204,25 @@ describe('Test promise logical operations', () => {
         }).catch(err => {
             should.exist(err);
             err.should.equal('Sandy');
+            return Promise.resolve();
+        });
+    });
+
+    it('should chain logic operation concat mix.', () => {
+        return Promise.xor([
+            () => Promise.resolve(),
+            () => Promise.resolve('Sandy')
+        ])._or([
+            () => Promise.resolve('Wendy'),
+            () => Promise.resolve('Selina')
+        ], res => res.length > 5)._xor([
+            () => Promise.resolve('McKenzie')
+        ], res => res.length > 6)._and([
+            () => Promise.resolve('Andy')
+        ]).then(results => {
+            results.length.should.equal(2);
+            results[0].should.equal('McKenzie');
+            return Promise.resolve();
         });
     });
 });

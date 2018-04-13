@@ -155,3 +155,5 @@ Extensions can now be concatenated with instance-specific functions: `_aggregate
 1. Added `_aside` concatenation to execute side-operations alongside the downstream without affecting the downstream itself, even ignoring errors if desired.
 
 2. Added `or`, `and` and `xor` methods to handle logical composition of a sequence of Promises's results. For examble the `or` operator doesn't even execute a successive Promise if any previous one succeeds, while `and` doesn't executre successive Promises of a failed one. Each logical operation "fails" if the downstream is undefined or if a given check function on the result is not met.
+
+3. Added `_or`, `_and` and `_xor` concat methods to chain logical block building with downstream data from other promises.

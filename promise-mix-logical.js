@@ -80,3 +80,15 @@ Promise.xor = (promisesFunctionsArray, check) => {
     });
     return p;
 };
+
+Promise.prototype._or = function (promisesFunctionsArray, check) {
+    return Promise.or([() => this].concat(promisesFunctionsArray), check);
+};
+
+Promise.prototype._and = function (promisesFunctionsArray, check) {
+    return Promise.and([() => this].concat(promisesFunctionsArray), check);
+};
+
+Promise.prototype._xor = function (promisesFunctionsArray, check) {
+    return Promise.xor([() => this].concat(promisesFunctionsArray), check);
+};
