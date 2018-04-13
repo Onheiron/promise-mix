@@ -67,4 +67,24 @@ describe('Test promise concatenation', () => {
             data.indexOf('step3').should.equal(3);
         });
     });
+
+    it('execute aside task.', () => {
+        return Promise.resolve('Original')
+            ._aside((stream) => {
+                return Promise.resolve(`Aside from ${stream}`);
+            })
+            .then((stream) => {
+                stream.should.equal('Original');
+            });
+    });
+
+    it('execute aside task ignoring error.', () => {
+        return Promise.resolve('Original')
+            ._aside((stream) => {
+                return Promise.reject(`Aside from ${stream}`);
+            }, true)
+            .then((stream) => {
+                stream.should.equal('Original');
+            });
+    });
 });
