@@ -149,3 +149,9 @@ Extensions can now be concatenated with instance-specific functions: `_aggregate
 1. Added `dev` warnings and errors for concatenation special cases: `_aggregate` and `_combine` will have non-object donwstreams assigned to an `_init` variable in the aggregation object.
 
 2. Added `mux` and `deMux` functionality to mix several promises from an array or an object of inputs as if it were one. See tests for some cool example!
+
+**1.4.X:** New Features:
+
+1. Added `_aside` concatenation to execute side-operations alongside the downstream without affecting the downstream itself, even ignoring errors if desired.
+
+2. Added `or`, `and` and `xor` methods to handle logical composition of a sequence of Promises's results. For examble the `or` operator doesn't even execute a successive Promise if any previous one succeeds, while `and` doesn't executre successive Promises of a failed one. Each logical operation "fails" if the downstream is undefined or if a given check function on the result is not met.
