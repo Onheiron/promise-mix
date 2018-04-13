@@ -1,6 +1,7 @@
 "use strict";
 
 require("./promise-mix-concat");
+require("./promise-mix-logical");
 
 /**
  * This section contains more Promise extensions with methods to handle several Promises simultaneously.
@@ -135,6 +136,24 @@ PromiseMux.prototype._reduce = function (promiseFuncArray) {
 PromiseMux.prototype._fReduce = function (funcArray) {
     return this.then((prev) => {
         return Promise.fReduce(funcArray, prev);
+    });
+};
+
+PromiseMux.prototype._or = function (promiseFuncArray, check) {
+    return this.then((prev) => {
+        return Promise.resolve(prev)._or(promiseFuncArray, check);
+    });
+};
+
+PromiseMux.prototype._and = function (promiseFuncArray, check) {
+    return this.then((prev) => {
+        return Promise.resolve(prev)._and(promiseFuncArray, check);
+    });
+};
+
+PromiseMux.prototype._xor = function (promiseFuncArray, check) {
+    return this.then((prev) => {
+        return Promise.resolve(prev)._xor(promiseFuncArray, check);
     });
 };
 

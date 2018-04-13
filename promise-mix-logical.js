@@ -1,7 +1,5 @@
 "use strict";
 
-require("./promise-mix-mux");
-
 Promise.or = (promisesFunctionsArray, check) => {
     let p = Promise.resolve();
     for (let k in promisesFunctionsArray) {
@@ -66,7 +64,7 @@ Promise.xor = (promisesFunctionsArray, check) => {
                             return res;
                         }
                     } else {
-                        return;
+                        return success;
                     }
                 });
         });
