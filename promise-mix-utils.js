@@ -93,6 +93,7 @@ Promise.prototype._sleep = function (milliseconds) {
  */
 Promise.prototype._log = function (tag) {
     return this.then((donwstream) => {
+        // eslint-disable-next-line no-console
         console.log(tag, donwstream);
         return donwstream;
     });
