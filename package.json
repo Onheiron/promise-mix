@@ -11,7 +11,12 @@
     "combine",
     "reduce",
     "aggregate",
-    "merge"
+    "merge",
+    "logic",
+    "filter",
+    "mux",
+    "utilities",
+    "looping"
   ],
   "author": "Onheiron",
   "license": "ISC",
