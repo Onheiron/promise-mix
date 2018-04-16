@@ -43,6 +43,35 @@ const PromiseMux = function (inputs) {
         }
         return output;
     };
+
+    this._filter = function (filterFunction) {
+        for (let p in this.pool) {
+            this.pool[p] = this.pool[p].then((item) => {
+                if (filterFunction(item)) return item;
+                else return;
+            });
+        }
+        return this;
+    };
+
+    this._shuffle = function () {
+        const shuffledPool = [];
+        const iterable = this.pool instanceof Array ? this.pool : Object.keys(this.pool);
+        while (iterable.length > 0) {
+            const rIndex = Math.floor(Math.random() * iterable.length);
+            shuffledPool.push(iterable.splice(rIndex, 1)[0]);
+        }
+        if (this.pool instanceof Array) {
+            this.pool = shuffledPool;
+        } else {
+            const newPool = {};
+            for (let i in Object.keys(this.pool)) {
+                newPool[Object.keys(this.pool)[i]] = this.pool[shuffledPool[i]];
+            }
+            this.pool = newPool;
+        }
+        return this;
+    };
 };
 
 Promise.mux = (inputs) => {

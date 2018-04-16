@@ -165,4 +165,40 @@ describe("Test promise explosion", () => {
             return Promise.resolve();
         });
     });
+
+    it("should filter pooled Promises.", () => {
+        return Promise.mux(["Andy", "Wendy", "Sammy"])._filter(name => {
+            return name.length > 4;
+        }).deMux()
+        ._clean()
+        .then((names) => {
+            should.exist(names);
+            names.length.should.equal(2);
+        });
+    });
+
+    it("should shuffle Promises.", () => {
+        return Promise.mux(["Andy", "Wendy", "Sammy"])
+        ._shuffle()
+        .deMux()
+        ._log("Shuffled:")
+        .then((names) => {
+            should.exist(names);
+            names.length.should.equal(3);
+        });
+    });
+
+    it("should shuffle object Promises.", () => {
+        return Promise.mux({
+            wife: "Andy", 
+            sister: "Wendy", 
+            boss: "Sammy"})
+        ._shuffle()
+        .deMux()
+        ._log("Shuffled:")
+        .then((names) => {
+            should.exist(names);
+            Object.keys(names).length.should.equal(3);
+        });
+    });
 });
