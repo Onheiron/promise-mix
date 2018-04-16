@@ -41,6 +41,10 @@ const checkNonObjectInit = (init, funcName) => {
  *  .catch((err) => {
  *      // err = "Bird is the word!"
  *  });
+ * 
+ * @param {promisesMap} a dictionary of promises.
+ * @param {init} a value to initialize the aggregate output.
+ * @returns {Promise} downstreaming an object containing the results of the given Promises.
  */
 Promise.aggregate = (promisesMap, init) => {
     init = checkNonObjectInit(init, "aggregate");
