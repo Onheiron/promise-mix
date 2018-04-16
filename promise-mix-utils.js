@@ -112,3 +112,13 @@ const loop = (prev, func, check, index = 0) => {
 Promise.prototype._loop = function (iterationFunction, breakCheck) {
     return loop(this, iterationFunction, breakCheck);
 };
+
+/**
+ * Excecutes a given function on the downstream only if a certain condition is met.
+ */
+Promise.prototype._when = function (functionToExecute, check) {
+    return this.then((downstream) => {
+        if(check(downstream)) return functionToExecute(downstream);
+        return downstream;
+    });
+};

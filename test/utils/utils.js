@@ -81,4 +81,22 @@ describe("Test promise utilities", () => {
                 result.should.equal(16);
             });
     });
+
+    it("should execute when block.", () => {
+        return Promise.resolve(1)
+            ._when(number => ++number, number => number < 2)
+            .then((number) => {
+                should.exist(number);
+                number.should.equal(2);
+            });
+    });
+
+    it("should NOT execute when block.", () => {
+        return Promise.resolve(1)
+            ._when(number => ++number, number => number > 2)
+            .then((number) => {
+                should.exist(number);
+                number.should.equal(1);
+            });
+    });
 });
