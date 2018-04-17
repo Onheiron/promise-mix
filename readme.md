@@ -1,4 +1,4 @@
-[![buddy pipeline](https://app.buddy.works/onheiron/promise-mix/pipelines/pipeline/130737/badge.svg?token=283a6a2985e2caa8d6cca85b846f96c4497ad84276bf38c02835ceb8085c2562 "buddy pipeline")](https://app.buddy.works/onheiron/promise-mix/pipelines/pipeline/130737) [![Inline docs](http://inch-ci.org/github/Onheiron/promise-mix.svg?branch=master)](http://inch-ci.org/github/Onheiron/promise-mix)
+[![buddy pipeline](https://app.buddy.works/onheiron/promise-mix/pipelines/pipeline/130737/badge.svg?token=283a6a2985e2caa8d6cca85b846f96c4497ad84276bf38c02835ceb8085c2562 "buddy pipeline")](https://app.buddy.works/onheiron/promise-mix/pipelines/pipeline/130737) [![Coverage Status](https://coveralls.io/repos/github/Onheiron/promise-mix/badge.svg?branch=master)](https://coveralls.io/github/Onheiron/promise-mix?branch=master) [![Inline docs](http://inch-ci.org/github/Onheiron/promise-mix.svg?branch=master)](http://inch-ci.org/github/Onheiron/promise-mix)
 
 # Promise Mix
 
