@@ -1,3 +1,5 @@
+[![buddy pipeline](https://app.buddy.works/onheiron/promise-mix/pipelines/pipeline/130737/badge.svg?token=283a6a2985e2caa8d6cca85b846f96c4497ad84276bf38c02835ceb8085c2562 "buddy pipeline")](https://app.buddy.works/onheiron/promise-mix/pipelines/pipeline/130737)
+
 # Promise Mix
 
 This module contains some extension to default Node.js [Promise](https://www.promisejs.org/).
