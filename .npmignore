@@ -1,2 +1,4 @@
 CODE_OF_CONDUCT.md
 /test
+/coverage
+.coveralls.yml
