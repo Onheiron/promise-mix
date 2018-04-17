@@ -1,9 +1,9 @@
 "use strict";
 
 module.exports = {
-    basic: require("./promise-mix"),
-    concat: require("./promise-mix-concat"),
-    promiseMux: require("./promise-mix-mux"),
-    logical: require("./promise-mix-logical"),
-    utils: require("./promise-mix-utils")
+    basic: require("./lib/promise-mix"),
+    concat: require("./lib/promise-mix-concat"),
+    promiseMux: require("./lib/promise-mix-mux"),
+    logical: require("./lib/promise-mix-logical"),
+    utils: require("./lib/promise-mix-utils")
 };
