@@ -2,7 +2,12 @@
 
 # Promise Mix
 
-This module contains some extension to default Node.js [Promise](https://www.promisejs.org/).
+![Logo](https://raw.githubusercontent.com/Onheiron/promise-mix/master/logo/promise-mix-small.png)
+
+This module contains a lot of extensions to default Node.js [Promise](https://www.promisejs.org/).
+
+[Check out the full A-Z list of extensions!](https://github.com/Onheiron/promise-mix/wiki/Dictionary)
+
 
 # How?
 ### Install
@@ -133,7 +138,7 @@ This module adds four basic composition functions to the basic `Promise` Object:
         // results = ['Rex', 'Lessie']
     });
     ```
-... And many more! [Check out the full list of A-Z extensions!](https://github.com/Onheiron/promise-mix/wiki/Dictionary)
+... And many more! [Check out the full A-Z list of extensions!](https://github.com/Onheiron/promise-mix/wiki/Dictionary)
 
 # Version History
 
