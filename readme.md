@@ -4,11 +4,13 @@
 
 This module contains some extension to default Node.js [Promise](https://www.promisejs.org/).
 
-# Installation
+# How?
+### Install
+```bash
+~$ npm install promise-mix
+```
 
-`npm install promise-mix`
-
-# Import
+### Import
 
 To use the extensions, simply import the module in your script:
 
@@ -20,7 +22,7 @@ or
 import 'promise-mix';
 ```
 
-# Motif
+# Why?
 
 While using promises I often find it hard to orchestrate them correctly and in an elegant, readable way.
 Thus I decided to make some extension to the basic `Promise` library in order to put some order in my code.
@@ -71,9 +73,9 @@ Promise.aggregate({
 
 Check out all the extensions for more useful combination methods.
 
-# Extensions
+# What?
 
-This module adds four more composition functions to the basic `Promise` Object:
+This module adds four basic composition functions to the basic `Promise` Object:
 
 1. `aggregate` puts the results of a series of Promise into an aggregate object and passes it downstream as a single promise result.
 
@@ -131,6 +133,7 @@ This module adds four more composition functions to the basic `Promise` Object:
         // results = ['Rex', 'Lessie']
     });
     ```
+... And many more! [Check out the full list of A-Z extensions!](https://github.com/Onheiron/promise-mix/wiki/Dictionary)
 
 # Version History
 
