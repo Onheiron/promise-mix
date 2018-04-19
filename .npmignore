@@ -1,5 +1,6 @@
 CODE_OF_CONDUCT.md
 /test
 /coverage
+/examples
 /logo
 .coveralls.yml
