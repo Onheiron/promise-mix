@@ -102,7 +102,7 @@ describe("Test promise utilities", () => {
 
     it("should execute when block.", () => {
         return Promise.resolve(1)
-            ._when(number => ++number, number => number < 2)
+            ._when(number => number < 2, number => ++number)
             .then((number) => {
                 should.exist(number);
                 number.should.equal(2);
@@ -111,10 +111,28 @@ describe("Test promise utilities", () => {
 
     it("should NOT execute when block.", () => {
         return Promise.resolve(1)
-            ._when(number => ++number, number => number > 2)
+            ._when(number => number > 2, number => ++number)
             .then((number) => {
                 should.exist(number);
                 number.should.equal(1);
+            });
+    });
+
+    it("should execute the if function.", () => {
+        return Promise.resolve(3)
+            ._ifElse(number => number > 2, number => ++number, number => --number)
+            .then((number) => {
+                should.exist(number);
+                number.should.equal(4);
+            });
+    });
+
+    it("should execute the else function.", () => {
+        return Promise.resolve(1)
+            ._ifElse(number => number > 2, number => ++number, number => --number)
+            .then((number) => {
+                should.exist(number);
+                number.should.equal(0);
             });
     });
 
@@ -150,6 +168,24 @@ describe("Test promise utilities", () => {
             .catch((err) => {
                 should.exist(err);
                 err.should.equal('Cannot read properties 2 of Jenny');
+            });
+    });
+
+    it("should check downstream existence failing.", () => {
+        return Promise.resolve()
+            ._exists('Bummer')
+            .catch((err) => {
+                should.exist(err);
+                err.should.equal('Bummer');
+            });
+    });
+
+    it("should check downstream existence succeeding.", () => {
+        return Promise.resolve('Jenny')
+            ._exists('Bummer')
+            .then((downstream) => {
+                should.exist(downstream);
+                downstream.should.equal('Jenny');
             });
     });
 });
