@@ -18,6 +18,19 @@ describe("Test aggregate function", () => {
         });
     });
 
+    it("should create aggregate data with non-promise values.", () => {
+        return Promise.aggregate({
+            artist: "Johnny Cash",
+            songs: ["Walk The Line", "Ring of Fire", "Folsom Prison Blues"]
+        }).then(({ artist, songs }) => {
+            should.exist(artist);
+            should.exist(songs);
+            artist.should.equal("Johnny Cash");
+            songs[0].should.equal("Walk The Line");
+            songs.length.should.equal(3);
+        });
+    });
+
     it("should create aggregate data with initial value", () => {
         return Promise.aggregate({
             artist: Promise.resolve("Johnny Cash"),

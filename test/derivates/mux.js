@@ -88,6 +88,15 @@ describe("Test promise explosion", () => {
             });
     });
 
+    it("should notify wrong input types", () => {
+        try {
+            return Promise.mux('String');
+        } catch(err) {
+            should.exist(err);
+            err.message.should.equal(`PromiseMux input must be an object or an array. Current input type is string`);
+        }
+    });
+
     it("should switch from Promise to PromiseMux and back to promise.", () => {
         return Promise.mux(["girls", "reading"])
             ._combine({ // for each topic, select the users interested in it
@@ -170,35 +179,36 @@ describe("Test promise explosion", () => {
         return Promise.mux(["Andy", "Wendy", "Sammy"])._filter(name => {
             return name.length > 4;
         }).deMux()
-        ._clean()
-        .then((names) => {
-            should.exist(names);
-            names.length.should.equal(2);
-        });
+            ._clean()
+            .then((names) => {
+                should.exist(names);
+                names.length.should.equal(2);
+            });
     });
 
     it("should shuffle Promises.", () => {
         return Promise.mux(["Andy", "Wendy", "Sammy"])
-        ._shuffle()
-        .deMux()
-        ._log("Shuffled:")
-        .then((names) => {
-            should.exist(names);
-            names.length.should.equal(3);
-        });
+            ._shuffle()
+            .deMux()
+            ._log("Shuffled:")
+            .then((names) => {
+                should.exist(names);
+                names.length.should.equal(3);
+            });
     });
 
     it("should shuffle object Promises.", () => {
         return Promise.mux({
-            wife: "Andy", 
-            sister: "Wendy", 
-            boss: "Sammy"})
-        ._shuffle()
-        .deMux()
-        ._log("Shuffled:")
-        .then((names) => {
-            should.exist(names);
-            Object.keys(names).length.should.equal(3);
-        });
+            wife: "Andy",
+            sister: "Wendy",
+            boss: "Sammy"
+        })
+            ._shuffle()
+            .deMux()
+            ._log("Shuffled:")
+            .then((names) => {
+                should.exist(names);
+                Object.keys(names).length.should.equal(3);
+            });
     });
 });

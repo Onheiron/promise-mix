@@ -52,7 +52,16 @@ describe("Test merge function", () => {
     it("should create merged data", () => {
         return Promise.merge([
             Promise.resolve(userLocalPosts),
-            Promise.resolve(userRemotePosts)
+            Promise.resolve(userRemotePosts[0])
+        ]).then((posts) => {
+            should.exist(posts);
+            posts[0].text.should.equal("YOLO!!!");
+            posts.length.should.equal(3);
+        });
+    });
+
+    it("should create merged data from static values", () => {
+        return Promise.merge([userLocalPosts, userRemotePosts
         ]).then((posts) => {
             should.exist(posts);
             posts[0].text.should.equal("YOLO!!!");
