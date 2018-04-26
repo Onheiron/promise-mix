@@ -180,3 +180,11 @@ or an Object) and keeps the new shuffled pool for chaining.
 1. Now base mix functions (aggregate, combine, merge, reduce) may accept some non-Promise values as well, this way you can build outputs more cleanly and you can skip writing chains to just return `Promise.resolve(val)`.
 
 2. Now combine and reduce may accept functions which do not return Promises, but "static values", so you don't have to return a `Promise.resolve(val)` in your function.
+
+**1.7.X:** New Features:
+
+1. Inverted `_when` parameters order: check comes first and function to execute if check is true comes second.
+
+2. Added `_ifElse` function that checks a condition, then executes an if-function if the check returns true, or an elseFunction if the check returns false.
+
+3. Added `_exists` function which is like `_check` but only accepts the error which is thrown if the downstream is evaluated to false.
