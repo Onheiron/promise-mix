@@ -78,6 +78,16 @@ describe('Test promise concatenation', () => {
             });
     });
 
+    it('execute aside task with breaking error.', () => {
+        return Promise.resolve('Original')
+            ._aside((stream) => {
+                return Promise.reject(`Aside from ${stream}`);
+            })
+            .catch((error) => {
+                error.should.equal('Aside from Original');
+            });
+    });
+
     it('execute aside task ignoring error.', () => {
         return Promise.resolve('Original')
             ._aside((stream) => {

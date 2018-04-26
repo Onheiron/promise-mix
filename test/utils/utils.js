@@ -14,6 +14,15 @@ describe("Test promise utilities", () => {
             });
     });
 
+    it("should resolve succeeded checks.", () => {
+        return Promise.resolve(7)
+            ._check(number => number > 6)
+            .then((number) => {
+                should.exist(number);
+                number.should.equal(7);
+            });
+    });
+
     it("should revive failed promises.", () => {
         return Promise.reject(5)
             ._revive(7)
@@ -46,6 +55,15 @@ describe("Test promise utilities", () => {
             should.not.exist(cleanOutput.paul);
             should.not.exist(cleanOutput.stacy);
         });
+    });
+
+    it("should't clean non-object or non-array donwstream.", () => {
+        return Promise.resolve('String')
+            ._clean()
+            .then(cleanOutput => {
+                should.exist(cleanOutput);
+                cleanOutput.should.equal('String');
+            });
     });
 
     it("should map downstream Promises.", () => {

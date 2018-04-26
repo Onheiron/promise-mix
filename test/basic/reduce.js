@@ -73,6 +73,54 @@ describe("Test reduce function", () => {
         });
     });
 
+    it("should create reduced data from functions returning static values.", () => {
+        return Promise.reduce([
+            () => { // select a user
+                return {
+                    id: "dumbass",
+                    name: "Dumb Ass"
+                };
+            },
+            (user) => { // fetch user"s posts
+                return Promise.resolve(userPosts.filter((post) => {
+                    return post.author == user.id;
+                }));
+            },
+            (posts) => { // only take the posts text
+                return Promise.resolve(posts.map((post) => {
+                    return post.text;
+                }));
+            }
+        ]).then((texts) => {
+            should.exist(texts);
+            texts[0].should.equal("YOLO!!!");
+            texts.length.should.equal(2);
+        });
+    });
+
+    it("should create reduced data from static values.", () => {
+        return Promise.reduce([
+            {
+                id: "dumbass",
+                name: "Dumb Ass"
+            },
+            (user) => { // fetch user"s posts
+                return Promise.resolve(userPosts.filter((post) => {
+                    return post.author == user.id;
+                }));
+            },
+            (posts) => { // only take the posts text
+                return Promise.resolve(posts.map((post) => {
+                    return post.text;
+                }));
+            }
+        ]).then((texts) => {
+            should.exist(texts);
+            texts[0].should.equal("YOLO!!!");
+            texts.length.should.equal(2);
+        });
+    });
+
     it("should create reduced data from \"promisified\" functions and initial value", () => {
         return Promise.fReduce([
             retrieveUser,
@@ -83,6 +131,23 @@ describe("Test reduce function", () => {
                 }));
             }
         ], "dumbass").then((texts) => {
+            should.exist(texts);
+            texts[0].should.equal("YOLO!!!");
+            texts.length.should.equal(2);
+        });
+    });
+
+    it("should create reduced data from \"promisified\" functions and initial value, but being passed static values instead", () => {
+        return Promise.fReduce([
+            "dumbass",
+            retrieveUser,
+            retrieveUserPosts,
+            (posts, done) => { // only take the posts text
+                done(null, posts.map((post) => {
+                    return post.text;
+                }));
+            }
+        ]).then((texts) => {
             should.exist(texts);
             texts[0].should.equal("YOLO!!!");
             texts.length.should.equal(2);

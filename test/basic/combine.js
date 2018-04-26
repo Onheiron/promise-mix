@@ -39,6 +39,51 @@ describe("Test combine function", () => {
         });
     });
 
+
+    it("should create combined data with non Promise return", () => {
+        return Promise.combine({
+            user: () => {
+                return {
+                    id: "dumbass",
+                    name: "Dumb Ass"
+                };
+            },
+            posts: ({ user }) => { // retrieve its posts
+                should.exist(user);
+                return userPosts.filter((item) => {
+                    return item.author == user.id;
+                });
+            }
+        }).then(({ user, posts }) => {
+            should.exist(user);
+            should.exist(posts);
+            user.name.should.equal("Dumb Ass");
+            posts[0].text.should.equal("YOLO!!!");
+            posts.length.should.equal(1);
+        });
+    });
+
+    it("should create combined data with static values", () => {
+        return Promise.combine({
+            user: {
+                id: "dumbass",
+                name: "Dumb Ass"
+            },
+            posts: ({ user }) => { // retrieve its posts
+                should.exist(user);
+                return userPosts.filter((item) => {
+                    return item.author == user.id;
+                });
+            }
+        }).then(({ user, posts }) => {
+            should.exist(user);
+            should.exist(posts);
+            user.name.should.equal("Dumb Ass");
+            posts[0].text.should.equal("YOLO!!!");
+            posts.length.should.equal(1);
+        });
+    });
+
     it("should create combined data with initial value", () => {
         return Promise.combine({
             posts: ({ user }) => { // retrieve its posts
@@ -70,12 +115,12 @@ describe("Test combine function", () => {
                 }));
             }
         }, "dumbass").then(({ _init, posts }) => {
-                should.exist(_init);
-                should.exist(posts);
-                _init.should.equal("dumbass");
-                posts[0].text.should.equal("YOLO!!!");
-                posts.length.should.equal(1);
-            });
+            should.exist(_init);
+            should.exist(posts);
+            _init.should.equal("dumbass");
+            posts[0].text.should.equal("YOLO!!!");
+            posts.length.should.equal(1);
+        });
     });
 
     it("should create combined data from \"promisified\" functions", () => {
@@ -85,6 +130,27 @@ describe("Test combine function", () => {
                     id: "dumbass",
                     name: "Dumb Ass"
                 });
+            },
+            posts: ({ user }, done) => { // retrieve its posts
+                should.exist(user);
+                done(null, userPosts.filter((item) => {
+                    return item.author == user.id;
+                }));
+            }
+        }).then(({ user, posts }) => {
+            should.exist(user);
+            should.exist(posts);
+            user.name.should.equal("Dumb Ass");
+            posts[0].text.should.equal("YOLO!!!");
+            posts.length.should.equal(1);
+        });
+    });
+
+    it("should create combined data from \"promisified\" functions, but being passed static values instead", () => {
+        return Promise.fCombine({
+            user: {
+                id: "dumbass",
+                name: "Dumb Ass"
             },
             posts: ({ user }, done) => { // retrieve its posts
                 should.exist(user);
