@@ -1,0 +1,4 @@
+exclude_patterns:
+  **/docs/
+  **/logo/
+  **/test/
