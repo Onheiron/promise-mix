@@ -73,6 +73,26 @@ describe("Test reduce function", () => {
         });
     });
 
+    it("should auto-throw Errors.", () => {
+        return Promise.reduce([
+            () => { // select a user
+                return Promise.resolve({
+                    id: "dumbass",
+                    name: "Dumb Ass"
+                });
+            },
+            (user) => { // fetch user"s posts
+                return Promise.resolve(userPosts.filter((post) => {
+                    return post.author == user.id;
+                }));
+            },
+            new Error('No Posts')
+        ]).catch((err) => {
+            should.exist(err);
+            err.message.should.equal('No Posts');
+        });
+    });
+
     it("should create reduced data from functions returning static values.", () => {
         return Promise.reduce([
             () => { // select a user
@@ -134,6 +154,17 @@ describe("Test reduce function", () => {
             should.exist(texts);
             texts[0].should.equal("YOLO!!!");
             texts.length.should.equal(2);
+        });
+    });
+
+    it("should auto-throw Errors.", () => {
+        return Promise.fReduce([
+            retrieveUser,
+            retrieveUserPosts,
+            new Error('No Posts')
+        ], "dumbass").catch((err) => {
+            should.exist(err);
+            err.message.should.equal('No Posts');
         });
     });
 

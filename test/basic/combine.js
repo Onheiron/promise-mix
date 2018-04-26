@@ -39,6 +39,20 @@ describe("Test combine function", () => {
         });
     });
 
+    it("should auto-throw Errors.", () => {
+        return Promise.combine({
+            user: () => { // select an user
+                return Promise.resolve({
+                    id: "dumbass",
+                    name: "Dumb Ass"
+                });
+            },
+            posts: new Error('No Posts')
+        }).catch((err) => {
+            should.exist(err);
+            err.message.should.equal('No Posts');
+        });
+    });
 
     it("should create combined data with non Promise return", () => {
         return Promise.combine({
@@ -164,6 +178,19 @@ describe("Test combine function", () => {
             user.name.should.equal("Dumb Ass");
             posts[0].text.should.equal("YOLO!!!");
             posts.length.should.equal(1);
+        });
+    });
+
+    it("should auto-thow Errors.", () => {
+        return Promise.fCombine({
+            user: {
+                id: "dumbass",
+                name: "Dumb Ass"
+            },
+            posts: new Error('No Posts')
+        }).catch((err) => {
+            should.exist(err);
+            err.message.should.equal('No Posts');
         });
     });
 
