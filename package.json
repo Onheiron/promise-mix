@@ -1,6 +1,6 @@
 {
   "name": "promise-mix",
-  "version": "1.6.2",
+  "version": "1.7.0",
   "description": "Node module with some useful Promise composition functionalities.",
   "main": "index.js",
   "scripts": {
