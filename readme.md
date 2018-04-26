@@ -174,3 +174,9 @@ Extensions can now be concatenated with instance-specific functions: `_aggregate
 
 2. Added `_filter` and `_shuffle` methods to muxed Promises. The `_filter` method accept a filtering function and sets to undefined all the filtered out downstreams (the function should return true for passing downstreams only). Chaining a `_clean()` after the `deMux` will finally remove the filtered-out undefined items from the downstream. The `_shuffle` method simply shuffles the Promises in the mux pool (be it an Array
 or an Object) and keeps the new shuffled pool for chaining.
+
+**1.6.X:** New Features:
+
+1. Now base mix functions (aggregate, combine, merge, reduce) may accept some non-Promise values as well, this way you can build outputs more cleanly and you can skip writing chains to just return `Promise.resolve(val)`.
+
+2. Now combine and reduce may accept functions which do not return Promises, but "static values", so you don't have to return a `Promise.resolve(val)` in your function.
