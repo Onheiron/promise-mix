@@ -31,6 +31,16 @@ describe("Test aggregate function", () => {
         });
     });
 
+    it("should auto-throw Errors.", () => {
+        return Promise.aggregate({
+            artist: "Johnny Cash",
+            songs: new Error('No Songs')
+        }).catch((err) => {
+            should.exist(err);
+            err.message.should.equal('No Songs');
+        });
+    });
+
     it("should create aggregate data with initial value", () => {
         return Promise.aggregate({
             artist: Promise.resolve("Johnny Cash"),

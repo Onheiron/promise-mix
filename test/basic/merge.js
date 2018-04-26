@@ -69,6 +69,17 @@ describe("Test merge function", () => {
         });
     });
 
+    it("should auto-throw Errors.", () => {
+        return Promise.merge([
+            userLocalPosts, 
+            userRemotePosts,
+            new Error('No Posts')
+        ]).catch((err) => {
+            should.exist(err);
+            err.message.should.equal('No Posts');
+        });
+    });
+
     it("should create merged data with initial value", () => {
         return Promise.merge([
             Promise.resolve(userLocalPosts),
