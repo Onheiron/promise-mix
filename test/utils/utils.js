@@ -146,6 +146,15 @@ describe("Test promise utilities", () => {
             });
     });
 
+    it("should just-pick array output.", () => {
+        return Promise.resolve(['Jenny', 'Diane', 'Lindsay', 'Alex'])
+            ._just(1)
+            .then((girl) => {
+                should.exist(girl);
+                girl.should.equal('Diane');
+            });
+    });
+
     it("should pick object output.", () => {
         return Promise.resolve({
             girlfriend: 'Jenny',
@@ -162,9 +171,30 @@ describe("Test promise utilities", () => {
             });
     });
 
+    it("should just-pick object output.", () => {
+        return Promise.resolve({
+            girlfriend: 'Jenny',
+            mother: 'Nadia',
+            sister: 'Wendy'
+        })._just('girlfriend')
+            .then((girl) => {
+                should.exist(girl);
+                girl.should.equal('Jenny');
+            });
+    });
+
     it("should turn keys to array and reject non array / object downstream picks.", () => {
         return Promise.resolve('Jenny')
             ._pick(2)
+            .catch((err) => {
+                should.exist(err);
+                err.should.equal('Cannot read properties 2 of Jenny');
+            });
+    });
+
+    it("should turn keys to array and reject non array / object downstream just-picks.", () => {
+        return Promise.resolve('Jenny')
+            ._just(2)
             .catch((err) => {
                 should.exist(err);
                 err.should.equal('Cannot read properties 2 of Jenny');
