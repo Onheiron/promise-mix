@@ -35,7 +35,7 @@ describe("Test aggregate function", () => {
         return Promise.aggregate({
             artist: "Johnny Cash",
             songs: new Error('No Songs')
-        }).catch((err) => {
+        }).catch(err => {
             should.exist(err);
             err.message.should.equal('No Songs');
         });
