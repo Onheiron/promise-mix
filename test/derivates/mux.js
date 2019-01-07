@@ -58,8 +58,8 @@ describe("Test promise explosion", () => {
         (init, done) => done(null, init + 1),
         (step1, done) => done(null, step1 * 2),
         (step2, done) => done(null, step2 / 3)
-    ], [2, 5, 8]).then((result, key) => {
-        return `Result is ${result} for key ${key}`;
+    ], [2, 5, 8]).then(function(result) {
+        return `Result is ${result} for key ${this.key}`;
     }).deMux(reports => {
         should.exist(reports);
         reports.length.should.equal(3);
@@ -74,8 +74,8 @@ describe("Test promise explosion", () => {
             easy: 2,
             normal: 5,
             hard: 8
-        }).then((result, key) => {
-            return `Result is ${result} for ${key}`;
+        }).then(function(result) {
+            return `Result is ${result} for ${this.key}`;
         }).deMux(reports => {
             should.exist(reports);
             should.exist(reports.easy);
