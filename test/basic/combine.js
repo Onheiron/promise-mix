@@ -39,6 +39,54 @@ describe("Test combine function", () => {
         });
     });
 
+    it("should work with any operation", () => {
+        return Promise.combine({
+            user: Promise.resolve({
+                id: "dumbass",
+                name: "Dumb Ass"
+            }),
+            posts: ({ user }) => { // retrieve its posts
+                should.exist(user);
+                return Promise.resolve(userPosts.filter(item => {
+                    return item.author == user.id;
+                }));
+            },
+            likes: 5,
+            friends: ({ posts, likes }) => Promise.resolve((posts.length + 1) * likes)
+        }).then(({ user, posts, likes, friends }) => {
+            should.exist(user);
+            should.exist(posts);
+            should.exist(likes);
+            should.exist(friends);
+            user.name.should.equal("Dumb Ass");
+            posts[0].text.should.equal("YOLO!!!");
+            posts.length.should.equal(1);
+            likes.should.equal(5);
+            friends.should.equal(10);
+        });
+    });
+
+    it("should auto-promisify functions", () => {
+        return Promise.combine({
+            user: (data, done) => done(null, {
+                id: "dumbass",
+                name: "Dumb Ass"
+            }),
+            posts: ({ user }, done) => { // retrieve its posts
+                should.exist(user);
+                return done(null, userPosts.filter(item => {
+                    return item.author == user.id;
+                }));
+            }
+        }, {}, true).then(({ user, posts }) => {
+            should.exist(user);
+            should.exist(posts);
+            user.name.should.equal("Dumb Ass");
+            posts[0].text.should.equal("YOLO!!!");
+            posts.length.should.equal(1);
+        });
+    });
+
     it("should auto-throw Errors.", () => {
         return Promise.combine({
             user: () => { // select an user

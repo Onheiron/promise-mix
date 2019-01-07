@@ -1,5 +1,6 @@
 "use strict";
 require("../../index");
+const Operation = require('../../lib/operation');
 const chai = require("chai")
     , should = chai.should();
 
@@ -10,6 +11,41 @@ describe("Test aggregate function", () => {
             artist: Promise.resolve("Johnny Cash"),
             songs: Promise.resolve(["Walk The Line", "Ring of Fire", "Folsom Prison Blues"])
         }).then(({ artist, songs }) => {
+            should.exist(artist);
+            should.exist(songs);
+            artist.should.equal("Johnny Cash");
+            songs[0].should.equal("Walk The Line");
+            songs.length.should.equal(3);
+        });
+    });
+
+    it("should work with any operation", () => {
+        return Promise.aggregate({
+            artist: "Johnny Cash",
+            songs: () => ["Walk The Line", "Ring of Fire", "Folsom Prison Blues"],
+            albums: Promise.resolve(["Walk The Line"]),
+            rewards: () => Promise.resolve(["Grammy Award"]),
+            friends: new Operation("Bob Dylan")
+        }).then(({ artist, songs, albums, rewards, friends }) => {
+            should.exist(artist);
+            should.exist(songs);
+            should.exist(albums);
+            should.exist(rewards);
+            should.exist(friends);
+            artist.should.equal("Johnny Cash");
+            songs[0].should.equal("Walk The Line");
+            songs.length.should.equal(3);
+            albums[0].should.equal("Walk The Line");
+            rewards[0].should.equal("Grammy Award");
+            friends.should.equal("Bob Dylan");
+        });
+    });
+
+    it("should auto-promisify functions", () => {
+        return Promise.aggregate({
+            artist: (data, done) => done(null, "Johnny Cash"),
+            songs: (data, done) => done(null, ["Walk The Line", "Ring of Fire", "Folsom Prison Blues"])
+        }, {}, true).then(({ artist, songs }) => {
             should.exist(artist);
             should.exist(songs);
             artist.should.equal("Johnny Cash");

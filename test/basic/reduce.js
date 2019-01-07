@@ -57,6 +57,33 @@ describe("Test reduce function", () => {
         texts.length.should.equal(2);
     }));
 
+    it("should work with any operation", () => Promise.reduce([
+        "This will be overwritten",
+        Promise.resolve({
+            id: "dumbass",
+            name: "Dumb Ass"
+        }),
+        user => userPosts.filter(post => post.author == user.id),
+        posts => Promise.resolve(posts.map(post => post.text))
+    ]).then(texts => {
+        should.exist(texts);
+        texts[0].should.equal("YOLO!!!");
+        texts.length.should.equal(2);
+    }));
+
+    it("should auto-promisify functions", () => Promise.reduce([
+        (data, done) => done(null, {
+            id: "dumbass",
+            name: "Dumb Ass"
+        }),
+        (user, done) => done(null, userPosts.filter(post => post.author == user.id)),
+        (posts, done) => done(null, posts.map(post => post.text))
+    ], [], true).then(texts => {
+        should.exist(texts);
+        texts[0].should.equal("YOLO!!!");
+        texts.length.should.equal(2);
+    }));
+
     it("should auto-throw Errors.", () => Promise.reduce([
         () => Promise.resolve({
             id: "dumbass",

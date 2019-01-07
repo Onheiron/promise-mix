@@ -58,6 +58,30 @@ describe("Test merge function", () => {
         posts.length.should.equal(3);
     }));
 
+    it("should work with any operation", () => Promise.merge([
+        () => Promise.resolve(userLocalPosts),
+        Promise.resolve(userRemotePosts[0]),
+        () => userRemotePosts[1],
+        userRemotePosts[1]
+    ]).then(posts => {
+        should.exist(posts);
+        posts[0].text.should.equal("YOLO!!!");
+        posts[1].text.should.equal("E = mc^2");
+        posts[2].text.should.equal("Studied @ Street University");
+        posts[3].text.should.equal("Working on my second PhD");
+        posts[4].text.should.equal("Working on my second PhD");
+        posts.length.should.equal(5);
+    }));
+
+    it("should auto-promisify functions", () => Promise.merge([
+        (data, done) => done(null, userLocalPosts),
+        (data, done) => done(null, userRemotePosts[0])
+    ], [], true).then(posts => {
+        should.exist(posts);
+        posts[0].text.should.equal("YOLO!!!");
+        posts.length.should.equal(3);
+    }));
+
     it("should create merged data from static values", () => Promise.merge([userLocalPosts, userRemotePosts
     ]).then(posts => {
         should.exist(posts);
