@@ -25,7 +25,7 @@ describe('Test promise concatenation', () => {
     }, { init: 'init' })._combine({
         step2: ({ step1 }) => Promise.resolve(step1)
     })._fCombine({
-        step3: ({ step1, step2 }, done) => done(null, { step2 })
+        step3: ({ step1, step2 }, done) => done(null, { step1, step2 })
     })._aggregate({
         step4: Promise.resolve('step4')
     }).then(data => {
