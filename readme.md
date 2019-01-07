@@ -188,3 +188,14 @@ or an Object) and keeps the new shuffled pool for chaining.
 2. Added `_ifElse` function that checks a condition, then executes an if-function if the check returns true, or an elseFunction if the check returns false.
 
 3. Added `_exists` function which is like `_check` but only accepts the error which is thrown if the downstream is evaluated to false.
+
+**1.8.X: Flexible Mapping!** New Features:
+
+1. Introduced the concept of `Operation` to wrap any argunet of basic composition functions (`aggregate`, `combine`, `fCombine`, `merge`, `reduce` and `fReduce`). This way you can now put anything you like as items (or fields) of the composition map.
+
+2. As a result of point 1 `aggregate` is now deprecated as its behaviour is now replicable with a `combine`.
+
+3. `Operation`s also work as `_ifElse` and `_when` "effects" (the `check` function is still a plain `Function`). Same goes for the `_aside` function which is now a generic `Operation`.
+
+4. Converstion of callback-style `Functions` into `Promises` with `promisify` is now at `Operation` level, so each base function (`aggregate`, `combine`, `fCombine`, `merge`, `reduce` and `fReduce`) now has a `promisify` optional flag (last optional parameter) which enables/disables the `promisify` conversion for *all the given functions*. If you wish to `promisify` only a specific step of your composition map, then you can create an `Operation` passing your callback function and the `promisify` flag `true` to its constructor.
+This change makes `fReduce` and `fCombine` obsolete, but they're kept as more direct method to handle promisified functions.

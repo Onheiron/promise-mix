@@ -49,64 +49,79 @@ const userRemoteActivities = [
 
 describe("Test merge function", () => {
 
-    it("should create merged data", () => {
-        return Promise.merge([
-            Promise.resolve(userLocalPosts),
-            Promise.resolve(userRemotePosts[0])
-        ]).then((posts) => {
+    it("should create merged data", () => Promise.merge([
+        Promise.resolve(userLocalPosts),
+        Promise.resolve(userRemotePosts[0])
+    ]).then(posts => {
+        should.exist(posts);
+        posts[0].text.should.equal("YOLO!!!");
+        posts.length.should.equal(3);
+    }));
+
+    it("should work with any operation", () => Promise.merge([
+        () => Promise.resolve(userLocalPosts),
+        Promise.resolve(userRemotePosts[0]),
+        () => userRemotePosts[1],
+        userRemotePosts[1]
+    ]).then(posts => {
+        should.exist(posts);
+        posts[0].text.should.equal("YOLO!!!");
+        posts[1].text.should.equal("E = mc^2");
+        posts[2].text.should.equal("Studied @ Street University");
+        posts[3].text.should.equal("Working on my second PhD");
+        posts[4].text.should.equal("Working on my second PhD");
+        posts.length.should.equal(5);
+    }));
+
+    it("should auto-promisify functions", () => Promise.merge([
+        (data, done) => done(null, userLocalPosts),
+        (data, done) => done(null, userRemotePosts[0])
+    ], [], true).then(posts => {
+        should.exist(posts);
+        posts[0].text.should.equal("YOLO!!!");
+        posts.length.should.equal(3);
+    }));
+
+    it("should create merged data from static values", () => Promise.merge([userLocalPosts, userRemotePosts
+    ]).then(posts => {
+        should.exist(posts);
+        posts[0].text.should.equal("YOLO!!!");
+        posts.length.should.equal(4);
+    }));
+
+    it("should auto-throw Errors.", () => Promise.merge([
+        userLocalPosts,
+        userRemotePosts,
+        new Error('No Posts')
+    ]).catch(err => {
+        should.exist(err);
+        err.message.should.equal('No Posts');
+    }));
+
+    it("should create merged data with initial value", () => Promise.merge([
+        Promise.resolve(userLocalPosts),
+        Promise.resolve(userRemotePosts)
+    ], {
+            text: "E = mc^2"
+        }).then(posts => {
             should.exist(posts);
-            posts[0].text.should.equal("YOLO!!!");
-            posts.length.should.equal(3);
-        });
-    });
+            posts[0].text.should.equal("E = mc^2");
+            posts.length.should.equal(5);
+        })
+    );
 
-    it("should create merged data from static values", () => {
-        return Promise.merge([userLocalPosts, userRemotePosts
-        ]).then((posts) => {
-            should.exist(posts);
-            posts[0].text.should.equal("YOLO!!!");
-            posts.length.should.equal(4);
-        });
-    });
-
-    it("should auto-throw Errors.", () => {
-        return Promise.merge([
-            userLocalPosts, 
-            userRemotePosts,
-            new Error('No Posts')
-        ]).catch((err) => {
-            should.exist(err);
-            err.message.should.equal('No Posts');
-        });
-    });
-
-    it("should create merged data with initial value", () => {
-        return Promise.merge([
+    it("should create nested merged data", () => Promise.merge([
+        Promise.merge([
             Promise.resolve(userLocalPosts),
             Promise.resolve(userRemotePosts)
-        ], {
-                text: "E = mc^2"
-            }).then((posts) => {
-                should.exist(posts);
-                posts[0].text.should.equal("E = mc^2");
-                posts.length.should.equal(5);
-            });
-    });
-
-    it("should create nested merged data", () => {
-        return Promise.merge([
-            Promise.merge([
-                Promise.resolve(userLocalPosts),
-                Promise.resolve(userRemotePosts)
-            ]),
-            Promise.merge([
-                Promise.resolve(userLocalActivities),
-                Promise.resolve(userRemoteActivities)
-            ])
-        ]).then((data) => {
-            should.exist(data);
-            data.length.should.equal(8);
-            data[0].text.should.equal("YOLO!!!");
-        });
-    });
+        ]),
+        Promise.merge([
+            Promise.resolve(userLocalActivities),
+            Promise.resolve(userRemoteActivities)
+        ])
+    ]).then(data => {
+        should.exist(data);
+        data.length.should.equal(8);
+        data[0].text.should.equal("YOLO!!!");
+    }));
 });

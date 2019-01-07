@@ -31,184 +31,142 @@ const userPosts = [
 ];
 
 const retrieveUser = (id, done) => {
-    const user = users.find((user) => {
-        return user.id == id;
-    });
+    const user = users.find(user => user.id == id);
     if (user) done(null, user);
     else done("No user found");
 };
 
 const retrieveUserPosts = (user, done) => {
-    const posts = userPosts.filter((post) => {
-        return post.author == user.id;
-    });
+    const posts = userPosts.filter(post => post.author == user.id);
     if (posts) done(null, posts);
     else done("No posts found");
 };
 
 describe("Test reduce function", () => {
 
-    it("should create reduced data", () => {
-        return Promise.reduce([
-            () => { // select a user
-                return Promise.resolve({
-                    id: "dumbass",
-                    name: "Dumb Ass"
-                });
-            },
-            (user) => { // fetch user"s posts
-                return Promise.resolve(userPosts.filter((post) => {
-                    return post.author == user.id;
-                }));
-            },
-            (posts) => { // only take the posts text
-                return Promise.resolve(posts.map((post) => {
-                    return post.text;
-                }));
-            }
-        ]).then((texts) => {
-            should.exist(texts);
-            texts[0].should.equal("YOLO!!!");
-            texts.length.should.equal(2);
-        });
-    });
+    it("should create reduced data", () => Promise.reduce([
+        () => Promise.resolve({
+            id: "dumbass",
+            name: "Dumb Ass"
+        }),
+        user => Promise.resolve(userPosts.filter(post => post.author == user.id)),
+        posts => Promise.resolve(posts.map(post => post.text))
+    ]).then(texts => {
+        should.exist(texts);
+        texts[0].should.equal("YOLO!!!");
+        texts.length.should.equal(2);
+    }));
 
-    it("should auto-throw Errors.", () => {
-        return Promise.reduce([
-            () => { // select a user
-                return Promise.resolve({
-                    id: "dumbass",
-                    name: "Dumb Ass"
-                });
-            },
-            (user) => { // fetch user"s posts
-                return Promise.resolve(userPosts.filter((post) => {
-                    return post.author == user.id;
-                }));
-            },
-            new Error('No Posts')
-        ]).catch((err) => {
-            should.exist(err);
-            err.message.should.equal('No Posts');
-        });
-    });
+    it("should work with any operation", () => Promise.reduce([
+        "This will be overwritten",
+        Promise.resolve({
+            id: "dumbass",
+            name: "Dumb Ass"
+        }),
+        user => userPosts.filter(post => post.author == user.id),
+        posts => Promise.resolve(posts.map(post => post.text))
+    ]).then(texts => {
+        should.exist(texts);
+        texts[0].should.equal("YOLO!!!");
+        texts.length.should.equal(2);
+    }));
 
-    it("should create reduced data from functions returning static values.", () => {
-        return Promise.reduce([
-            () => { // select a user
-                return {
-                    id: "dumbass",
-                    name: "Dumb Ass"
-                };
-            },
-            (user) => { // fetch user"s posts
-                return Promise.resolve(userPosts.filter((post) => {
-                    return post.author == user.id;
-                }));
-            },
-            (posts) => { // only take the posts text
-                return Promise.resolve(posts.map((post) => {
-                    return post.text;
-                }));
-            }
-        ]).then((texts) => {
-            should.exist(texts);
-            texts[0].should.equal("YOLO!!!");
-            texts.length.should.equal(2);
-        });
-    });
+    it("should auto-promisify functions", () => Promise.reduce([
+        (data, done) => done(null, {
+            id: "dumbass",
+            name: "Dumb Ass"
+        }),
+        (user, done) => done(null, userPosts.filter(post => post.author == user.id)),
+        (posts, done) => done(null, posts.map(post => post.text))
+    ], [], true).then(texts => {
+        should.exist(texts);
+        texts[0].should.equal("YOLO!!!");
+        texts.length.should.equal(2);
+    }));
 
-    it("should create reduced data from static values.", () => {
-        return Promise.reduce([
-            {
+    it("should auto-throw Errors.", () => Promise.reduce([
+        () => Promise.resolve({
+            id: "dumbass",
+            name: "Dumb Ass"
+        }),
+        user => Promise.resolve(userPosts.filter(post => post.author == user.id)),
+        new Error('No Posts')
+    ]).catch(err => {
+        should.exist(err);
+        err.message.should.equal('No Posts');
+    }));
+
+    it("should create reduced data from functions returning static values.", () => Promise.reduce([
+        () => { // select a user
+            return {
                 id: "dumbass",
                 name: "Dumb Ass"
-            },
-            (user) => { // fetch user"s posts
-                return Promise.resolve(userPosts.filter((post) => {
-                    return post.author == user.id;
-                }));
-            },
-            (posts) => { // only take the posts text
-                return Promise.resolve(posts.map((post) => {
-                    return post.text;
-                }));
-            }
-        ]).then((texts) => {
-            should.exist(texts);
-            texts[0].should.equal("YOLO!!!");
-            texts.length.should.equal(2);
-        });
-    });
+            };
+        },
+        user => Promise.resolve(userPosts.filter(post => post.author == user.id)),
+        posts => Promise.resolve(posts.map(post => post.text))
+    ]).then(texts => {
+        should.exist(texts);
+        texts[0].should.equal("YOLO!!!");
+        texts.length.should.equal(2);
+    }));
 
-    it("should create reduced data from \"promisified\" functions and initial value", () => {
-        return Promise.fReduce([
-            retrieveUser,
-            retrieveUserPosts,
-            (posts, done) => { // only take the posts text
-                done(null, posts.map((post) => {
-                    return post.text;
-                }));
-            }
-        ], "dumbass").then((texts) => {
-            should.exist(texts);
-            texts[0].should.equal("YOLO!!!");
-            texts.length.should.equal(2);
-        });
-    });
+    it("should create reduced data from static values.", () => Promise.reduce([
+        {
+            id: "dumbass",
+            name: "Dumb Ass"
+        },
+        user => Promise.resolve(userPosts.filter(post => post.author == user.id)),
+        posts => Promise.resolve(posts.map(post => post.text))
+    ]).then(texts => {
+        should.exist(texts);
+        texts[0].should.equal("YOLO!!!");
+        texts.length.should.equal(2);
+    }));
 
-    it("should auto-throw Errors.", () => {
-        return Promise.fReduce([
-            retrieveUser,
-            retrieveUserPosts,
-            new Error('No Posts')
-        ], "dumbass").catch((err) => {
-            should.exist(err);
-            err.message.should.equal('No Posts');
-        });
-    });
+    it("should create reduced data from \"promisified\" functions and initial value", () => Promise.fReduce([
+        retrieveUser,
+        retrieveUserPosts,
+        (posts, done) => done(null, posts.map(post => post.text))
+    ], "dumbass").then(texts => {
+        should.exist(texts);
+        texts[0].should.equal("YOLO!!!");
+        texts.length.should.equal(2);
+    }));
 
-    it("should create reduced data from \"promisified\" functions and initial value, but being passed static values instead", () => {
-        return Promise.fReduce([
-            "dumbass",
-            retrieveUser,
-            retrieveUserPosts,
-            (posts, done) => { // only take the posts text
-                done(null, posts.map((post) => {
-                    return post.text;
-                }));
-            }
-        ]).then((texts) => {
-            should.exist(texts);
-            texts[0].should.equal("YOLO!!!");
-            texts.length.should.equal(2);
-        });
-    });
+    it("should auto-throw Errors.", () => Promise.fReduce([
+        retrieveUser,
+        retrieveUserPosts,
+        new Error('No Posts')
+    ], "dumbass").catch(err => {
+        should.exist(err);
+        err.message.should.equal('No Posts');
+    }));
 
-    it("should mix promises like a boss", () => {
-        return Promise.fReduce([
-            retrieveUser,
-            retrieveUserPosts,
-            (posts, done) => { // only take the posts text
-                Promise.reduce([
-                    (posts) => { // take only posts texts
-                        return Promise.resolve(posts.map((post) => {
-                            return post.text;
-                        }));
-                    },
-                    (texts) => { // remove duplicate texts
-                        return Promise.resolve(texts.filter((text, index) => {
-                            return texts.indexOf(text) == index;
-                        }));
-                    }
-                ], posts).then((texts) => {
-                    done(null, texts);
-                }).catch(done);
-            }
-        ], "dumbass").then((texts) => {
-            should.exist(texts);
-            texts[0].should.equal("YOLO!!!");
-            texts.length.should.equal(1);
-        });
-    });
+    it("should create reduced data from \"promisified\" functions and initial value, but being passed static values instead", () => Promise.fReduce([
+        "dumbass",
+        retrieveUser,
+        retrieveUserPosts,
+        (posts, done) => { // only take the posts text
+            done(null, posts.map(post => post.text));
+        }
+    ]).then(texts => {
+        should.exist(texts);
+        texts[0].should.equal("YOLO!!!");
+        texts.length.should.equal(2);
+    }));
+
+    it("should mix promises like a boss", () => Promise.fReduce([
+        retrieveUser,
+        retrieveUserPosts,
+        (posts, done) => Promise.reduce([
+            posts => Promise.resolve(posts.map(post => post.text)),
+            texts => Promise.resolve(texts.filter((text, index) => texts.indexOf(text) == index))
+        ], posts).then(texts => done(null, texts))
+            .catch(done)
+    ], "dumbass").then(texts => {
+        should.exist(texts);
+        texts[0].should.equal("YOLO!!!");
+        texts.length.should.equal(1);
+    }));
 });
