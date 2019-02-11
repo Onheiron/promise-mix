@@ -7,3 +7,18 @@ nav ul {
 nav li {
     display: inline;
 }
+
+nav[data-toggle="toc"] {
+    top: 42px;
+}
+  
+@media (max-width: 768px) {
+    nav[data-toggle="toc"] {
+        margin-bottom: 42px;
+        position: static;
+    }
+
+    nav[data-toggle="toc"] .nav .active .nav {
+        display: none;
+    }
+}

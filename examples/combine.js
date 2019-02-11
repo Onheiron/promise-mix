@@ -2,14 +2,14 @@
 require('../index');
 
 /**
- * Here's some sample code for the aggregate function.
+ * Here's some sample code for the combine function.
  */
 
 /**
- * Organize unlinked Promises results
+ * Organize unrealted Promises results
  */
 exports.getStuff = () => {
-    return Promise.aggregate({
+    return Promise.combine({
         apples: Promise.resolve(['Green Apple', 'Red Apple']),
         dogs: Promise.resolve(['Lessie', 'Milo'])
     });
@@ -19,17 +19,27 @@ exports.getStuff = () => {
  * Add items to an object retrieving them asynchronously.
  */
 exports.addAnimals = (stuffILike) => {
-    return Promise.aggregate({
+    return Promise.combine({
         cats: Promise.resolve(['Felix', 'Garfield']),
         dogs: Promise.resolve(['Lessie', 'Milo'])
     }, stuffILike);
+};
+/**
+ * Add 
+ */
+exports.addAnimals = (stuffILike) => {
+    return Promise.resolve(stuffILike) // this might be an ansync call to retrieve stuff you like
+        ._combine({
+            cats: Promise.resolve(['Felix', 'Garfield']),
+            dogs: Promise.resolve(['Lessie', 'Milo'])
+        });
 };
 
 /**
  * Update items of an object asynchronously.
  */
 exports.updateStuff = ({ cats, dogs }) => {
-    return Promise.aggregate({
+    return Promise.combine({
         cats: Promise.resolve(cats.concat(['Felix', 'Garfield'])),
         dogs: Promise.resolve(dogs.concat(['Lessie', 'Milo']))
     }, { cats, dogs });
@@ -39,12 +49,12 @@ exports.updateStuff = ({ cats, dogs }) => {
  * Build complex objects.
  */
 exports.getStuff = () => {
-    return Promise.aggregate({
-        food: Promise.aggregate({
+    return Promise.combine({
+        food: Promise.combine({
             fruit: Promise.resolve(['Green Apple', 'Red Apple']),
             dessert: Promise.resolve(['Cake', 'Cookies'])
         }),
-        animals: Promise.aggregate({
+        animals: Promise.combine({
             cats: Promise.resolve(['Felix', 'Garfield']),
             dogs: Promise.resolve(['Lessie', 'Milo'])
         })
@@ -55,7 +65,7 @@ exports.getStuff = () => {
  * You can use _check to check and throw item-specific errors.
  */
 exports.getStuff = () => {
-    return Promise.aggregate({
+    return Promise.combine({
         cats: Promise.resolve([])._check(cats => cats.length, 'You have to like cats.'),
         dogs: Promise.resolve(['Lessie', 'Milo'])
     });
@@ -65,7 +75,7 @@ exports.getStuff = () => {
  * You can use _clean to remove empty results.
  */
 exports.getStuff = () => {
-    return Promise.aggregate({
+    return Promise.combine({
         cats: Promise.resolve([]),
         dogs: Promise.resolve(['Lessie', 'Milo'])
     })._clean();

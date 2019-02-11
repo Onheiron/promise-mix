@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Promise Mix</title>
+    <link rel="stylesheet" type="text/css" href="../style.css">
+    <link rel="stylesheet" type="text/css" href="../libs/highlight/styles/atom-one-light.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css" />
+    <link href="https://fonts.googleapis.com/css?family=Advent+Pro|Aladin|Alegreya|Alice|Antic|Arima+Madurai|Asar|Average|Bad+Script|Baloo|Buda:300|Buenard|Catamaran|Copse|Cormorant+Upright|Croissant+One|David+Libre|Dosis|Fredoka+One|Gothic+A1|Goudy+Bookletter+1911|Halant|IM+Fell+DW+Pica|IM+Fell+English|Josefin+Sans|Kurale|Lancelot|Linden+Hill|Lobster|Lustria|Manuale|Marko+One|Montaga|Nanum+Gothic|Neuton|News+Cycle|Oregano|Overlock|Pavanam|Peddana|Petrona|Pontano+Sans|Quicksand|Rajdhani|Ranga|Salsa|Shrikhand|Sorts+Mill+Goudy|Sree+Krushnadevaraya|Sumana|Trykker" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+
+    <script src="https://embed.runkit.com" data-element-id="aggregate-test"></script>
+    <script src="https://embed.runkit.com" data-element-id="aggregate-chain-test"></script>
+    <script src="https://embed.runkit.com" data-element-id="and-test"></script>
+    <script src="https://embed.runkit.com" data-element-id="and-chain-test"></script>
+    <script src="https://embed.runkit.com" data-element-id="aside-test"></script>
+    <script src="https://embed.runkit.com" data-element-id="check-test"></script>
+    <script src="https://embed.runkit.com" data-element-id="check-or-revive-test"></script>
+    <script src="https://embed.runkit.com" data-element-id="clean-test"></script>
+    <script src="https://embed.runkit.com" data-element-id="combine-test"></script>
+    <script src="https://embed.runkit.com" data-element-id="combine-chain-test"></script>
+    <script src="https://embed.runkit.com" data-element-id="exists-test"></script>
+    <script src="https://embed.runkit.com" data-element-id="if-else-test"></script>
+    <script src="https://embed.runkit.com" data-element-id="ignore-test"></script>
+    <script src="https://embed.runkit.com" data-element-id="just-test"></script>
+    <script src="https://embed.runkit.com" data-element-id="log-test"></script>
+    <script src="https://embed.runkit.com" data-element-id="loop-test"></script>
+    <script src="https://embed.runkit.com" data-element-id="map-test"></script>
+    <script src="https://embed.runkit.com" data-element-id="merge-test"></script>
+    <script src="https://embed.runkit.com" data-element-id="merge-chain-test"></script>
+</head>
+
+<body style="padding: 2em;" data-spy="scroll" data-target="#toc">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3">
+                <nav id="toc" data-toggle="toc" class="sticky-top"></nav>
+            </div>
+            <div class="col-sm-9">
+                <h2 id="base" style="font-size: 3em;" data-toc-text="Base methods">Base methods <code>1.0+</code></h2>
+                <hr/>
+                <br/>
+                <h2 id="aggregate" data-toc-text="&nbsp;&nbsp;Aggregate (Depr. in 1.8)">Aggregate (Depr. in 1.8) <code>1.0+</code></h2>
+                <p>Accepts a dictionary of Promises and resolves with an object containing the results of each <code>Promise</code> with the relative key.</p>
+                <h3 id="aggregate-static" data-toc-text="&nbsp;&nbsp;Promise.aggregate">Promise.aggregate (static) <code>1.0+</code></h3>
+                <h5><pre><code class="javascript">Promise.aggregate(Object: operationsMap, [Object: init = {}, Boolean: promisify = false])</code></pre></h5>
+                <p>Static method <code>Promise.aggregate</code> creates a new <code>Promise</code> from a map object.</p>
+                <h5>Try yourself</h5>
+                <div id="aggregate-test" class="embedly-card"> 
+                    require('promise-mix');
+                    Promise.aggregate({
+                        dogs: Promise.resolve(["Laika", "Lessie"]),
+                        cats: Promise.resolve(["Felix", "Garfield"])
+                    }, { turtles: ["Leonardo", "Donatello"] })._log("Animals");
+                </div>
+                <br/>
+                <h3 id="aggregate-chain" data-toc-text="&nbsp;&nbsp;promise._aggregate">promise._aggregate (chain) <code>1.2+</code></h3>
+                <h5><pre><code class="javascript">promise._aggregate(Object: operationsMap)</code></pre></h5>
+                <p>Instance method <code>promise._aggregate</code> chains with a previous <code>Promise</code> (just like a <code>promise.then</code>) and uses the resolve value from the previous <code>Promise</code> as an init value.</p>
+                <h5>Try yourself</h5>
+                <div id="aggregate-chain-test" class="embedly-card"> 
+                    require('promise-mix');
+                    const promise = Promise.resolve({ turtles: ["Leonardo", "Donatello"] });
+                    promise._aggregate({
+                        dogs: Promise.resolve(["Laika", "Lessie"]),
+                        cats: Promise.resolve(["Felix", "Garfield"])
+                    })._log("Animals");
+                </div>
+                <br/><br/>
+                <h2 id="combine" data-toc-text="&nbsp;&nbsp;Combine">Combine <code>1.0+</code></h2>
+                <p>Accepts a dictionary of values which converts into <code>Operation</code>s and resolves with an object containing the results of each <code>Operation</code> with the relative key.</p>
+                <h3 id="combine-static" data-toc-text="&nbsp;&nbsp;Promise.combine">Promise.combine (static) <code>1.0+</code></h3>
+                <h5><pre><code class="javascript">Promise.combine(object, [init = {}, promisify = false])</code></pre></h5>
+                <p>Static method <code>Promise.combine</code> creates a new <code>Promise</code> from a map object.</p>
+                <h5>Try yourself</h5>
+                <div id="combine-test" class="embedly-card"> 
+                    require('promise-mix');
+                    const Operation = require('promise-mix').operation;
+                    Promise.combine({
+                        // function returning a Promise
+                        dogs: () => Promise.resolve(["Laika", "Lessie"]),
+                        // a plain Promise
+                        cats: Promise.resolve(["Felix", "Garfield"]),
+                        // a plain value
+                        fish: "Nemo",
+                        // a function returning a plain value
+                        birds: () => "Tweety",
+                        // an Operation (in this case promisifying a function)
+                        snakes: new Operation((data, done) => done(null, "Sir Biss"), true)
+                    }, { turtles: ["Leonardo", "Donatello"] })._log("Animals");
+                </div>
+                <br/>
+                <h3 id="combine-chain" data-toc-text="&nbsp;&nbsp;promise._combine">promise._combine (chain) <code>1.2+</code></h3>
+                <h5><pre><code class="javascript">promise._combine(object)</code></pre></h5>
+                <p>Instance method <code>promise._combine</code> chains with a previous <code>Promise</code> (just like a <code>promise.then</code>) and uses the resolve value from the previous <code>Promise</code> as an init value.</p>
+                <h5>Try yourself</h5>
+                <div id="combine-chain-test" class="embedly-card"> 
+                    require('promise-mix');
+                    const Operation = require('promise-mix').operation;
+                    const promise = Promise.resolve({ turtles: ["Leonardo", "Donatello"] });
+                    promise._combine({
+                        // function returning a Promise
+                        dogs: () => Promise.resolve(["Laika", "Lessie"]),
+                        // a plain Promise
+                        cats: Promise.resolve(["Felix", "Garfield"]),
+                        // a plain value
+                        fish: "Nemo",
+                        // a function returning a plain value
+                        birds: () => "Tweety",
+                        // an Operation (in this case promisifying a function)
+                        snakes: new Operation((data, done) => done(null, "Sir Biss"), true)
+                    })._log("Animals");
+                </div>
+                <br/><br/>
+                <h2 id="merge" data-toc-text="&nbsp;&nbsp;Merge">Merge <code>1.0+</code></h2>
+                <p>Just like regular <code>Promise.all</code> but automatically flattens the results array.</p>
+                <h3 id="merge-static" data-toc-text="&nbsp;&nbsp;Promise.merge">Promise.merge (static) <code>1.0+</code></h3>
+                <h5><pre><code class="javascript">Promise.merge(Array: operations, [init = []])</code></pre></h5>
+                <p>Static method <code>Promise.merge</code> creates a new <code>Promise</code> from an operations array.</p>
+                <h5>Try yourself</h5>
+                <div id="merge-test" class="embedly-card"> 
+                    require('promise-mix');
+                    Promise.merge([
+                        Promise.resolve(["Laika", "Lessie"]),
+                        () => Promise.resolve(["Felix", "Garfield"]),
+                        "Tweety",
+                        "Sir Biss"
+                    ], ["Leonardo", "Donatello"])._log("Merged Animals");
+                </div>
+                <br/>
+                <h3 id="merge-chain" data-toc-text="&nbsp;&nbsp;promise._merge">promise._map (chain) <code>1.2+</code></h3>
+                <h5><pre><code class="javascript">promise._map(Array: operations)</code></pre></h5>
+                <p>Instance method <code>promise._map</code> chains with a previous <code>Promise</code> (just like a <code>promise.then</code>) and uses the resolve value from the previous <code>Promise</code> as an init value.</p>
+                <h5>Try yourself</h5>
+                <div id="merge-chain-test" class="embedly-card"> 
+                    require('promise-mix');
+                    const promise = Promise.resolve(["Leonardo", "Donatello"]);
+                    promise._merge([
+                        Promise.resolve(["Laika", "Lessie"]),
+                        () => Promise.resolve(["Felix", "Garfield"]),
+                        "Tweety",
+                        "Sir Biss"
+                    ])._log("Merged Animals");
+                </div>
+                <br/><br/>
+                <h2 id="reduce" data-toc-text="&nbsp;&nbsp;Reduce">Reduce</h2>
+                <hr/>
+                <br/>
+                <h2 id="mux" style="font-size: 3em;" data-toc-text="Mux methods">Mux methods <code>1.3+</code></h2>
+                <hr/>
+                <br/>
+                <h2 id="mux-method" data-toc-text="&nbsp;&nbsp;Mux">Mux</h2>
+                <h2 id="filter" data-toc-text="&nbsp;&nbsp;Filter">Filter</h2>
+                <hr/>
+                <br/>
+                <h2 id="logical" style="font-size: 3em;" data-toc-text="Logical methods">Logical methods <code>1.4+</code></h2>
+                <hr/>
+                <br/>
+                <h2 id="and" data-toc-text="&nbsp;&nbsp;And">And <code>1.4+</code></h2>
+                <p>Accepts an array of Functions returning Promises and resolves only if each <code>Promise</code> resolves correctly.
+                    <br/>When resolving it passes an array with all the resolved values down-stream.</p>
+                <p>It evaluates the Functions in sequence and rejects as soon as a <code>Promise</code> rejects skipping any subsequent evaluation.</p>
+                <h3 id="and-static" data-toc-text="&nbsp;&nbsp;Promise.and">Promise.and (static) <code>1.4+</code></h3>
+                <h5><pre><code class="javascript">Promise.and(array)</code></pre></h5>
+                <p>Static method <code>Promise.and</code> creates a new <code>Promise</code> from an array of Functions returning Promises.</p>
+                <h5>Try yourself</h5>
+                <div id="and-test" class="embedly-card"> 
+                    require('promise-mix');
+                    Promise.and([
+                        () => Promise.resolve("This went fine..."),
+                        () => Promise.reject("This broke!"),
+                        () => Promise.resolve("This would also work!"), // this won't be evaluated
+                    ]).catch(console.log);
+                </div>
+                <br/>
+                <h3 id="and-chain" data-toc-text="&nbsp;&nbsp;promise._and">promise._and (chain) <code>1.4+</code></h3>
+                <h5><pre><code class="javascript">promise._and(array)</code></pre></h5>
+                <p>Instance method <code>promise._and</code> chains with a previous <code>Promise</code> (just like a <code>promise.then</code>).</p>
+                <h5>Try yourself</h5>
+                <div id="and-chain-test" class="embedly-card"> 
+                    require('promise-mix');
+                    const promise = Promise.resolve("This aleady went fine...");
+                    promise._and([
+                        () => Promise.resolve("This went fine too..."),
+                        () => Promise.resolve("Everything went fine!")
+                    ])._log("Success");
+                </div>
+                <br/><br/>
+                <h2 id="or" data-toc-text="&nbsp;&nbsp;Or">Or</h2>
+                <h2 id="xor" data-toc-text="&nbsp;&nbsp;XOr">XOr</h2>
+                <hr/>
+                <br/>
+                <h2 id="utils" style="font-size: 3em;" data-toc-text="Utils methods">Utils methods <code>1.5+</code></h2>
+                <hr/>
+                <br/>
+                <h2 id="aside" data-toc-text="&nbsp;&nbsp;Aside">Aside <code>1.4+</code></h2>
+                <p>Executes some <code>Operation</code> within a <code>Promise</code> chain, but resolves with the value obtained from the previous <code>Promise</code>.
+                    <br/>This way the result of the <code>_aside</code> <code>Operation</code> is discarded.</p>
+                <h3 id="aside-chain" data-toc-text="&nbsp;&nbsp;promise._aside">promise._aside (chain) <code>1.4+</code></h3>
+                <h5><pre><code class="javascript">promise._aside(Operation: operation)</code></pre></h5>
+                <h5>Try yourself</h5>
+                <div id="aside-test" class="embedly-card"> 
+                    require('promise-mix');
+                    const Operation = require('promise-mix').operation;
+                    const promise = Promise.resolve("Original precious down-stream.");
+                    promise._aside(new Operation("Doing this aside from main chain..."))
+                    ._log("Success");
+                </div>
+                <br/><br/>
+                <h2 id="check" data-toc-text="&nbsp;&nbsp;Check">Check <code>1.5+</code></h2>
+                <p>Invokes a given <code>check</code> <code>Function</code> passing it the down-stream value and rejects if the <code>Function</code> returns <code>false</code>.
+                    <br/>You can optionally pass which error object to reject with.</p>
+                <h3 id="check-chain" data-toc-text="&nbsp;&nbsp;promise._check">promise._check (chain) <code>1.5+</code></h3>
+                <h5><pre><code class="javascript">promise._check(Function: check, [error])</code></pre></h5>
+                <h5>Try yourself</h5>
+                <div id="check-test" class="embedly-card"> 
+                    require('promise-mix');
+                    const promise = Promise.resolve({ valid: false });
+                    promise._check(data => data.vaild, "Invalid data!")
+                        .catch(err => console.log("Error", err));
+                </div>
+                <br/><br/>
+                <h2 id="check-or-revive" data-toc-text="&nbsp;&nbsp;CheckOrRevive">CheckOrRevive <code>1.5+</code></h2>
+                <p>Invokes a given <code>check</code> <code>Function</code> passing it the down-stream value and if the <code>Function</code> returns <code>false</code> it swaps the down-stream with an error or a given new down-stream.</p>
+                <h3 id="check-or-revive-chain" data-toc-text="&nbsp;&nbsp;promise._checkOrRevive">promise._checkOrRevive (chain) <code>1.5+</code></h3>
+                <h5><pre><code class="javascript">promise._checkOrRevive(Function: check, [new_downstream])</code></pre></h5>
+                <h5>Try yourself</h5>
+                <div id="check-or-revive-test" class="embedly-card"> 
+                    require('promise-mix');
+                    const promise = Promise.resolve({ valid: false });
+                    promise._checkOrRevive(data => data.vaild, { valid: true })
+                        ._log("Revived with");
+                </div>
+                <br/><br/>
+                <h2 id="clean" data-toc-text="&nbsp;&nbsp;Combine">Clean <code>1.5+</code></h2>
+                <p>Removes from the down-stream any <code>null</code>, <code>undefined</code> or empty field.</p>
+                <h3 id="clean-chain" data-toc-text="&nbsp;&nbsp;promise._clean">promise._clean (chain) <code>1.5+</code></h3>
+                <h5><pre><code class="javascript">promise._clean()</code></pre></h5>
+                <h5>Try yourself</h5>
+                <div id="clean-test" class="embedly-card"> 
+                    require('promise-mix');
+                    const promise = Promise.resolve({ name: 'Buck', owner: undefined, troubles: [], pedigree: {} });
+                    promise._clean()
+                        ._log("Clean Data");
+                </div>
+                <br/><br/>
+                <h2 id="exists" data-toc-text="&nbsp;&nbsp;Exists">Exists <code>1.7+</code></h2>
+                <p>Works like <a href="#promise-_check">promise._check</a> but implicitly checks if the down-stream is not <code>null</code> nor <code>undefined</code>
+                    <br/>Useful with DB queries to check if they actually found something and handle the case of missing resources.</p>
+                <h3 id="exists-chain" data-toc-text="&nbsp;&nbsp;promise._exists">promise._exists (chain) <code>1.7+</code></h3>
+                <h5><pre><code class="javascript">promise._exists([error])</code></pre></h5>
+                <h5>Try yourself</h5>
+                <div id="exists-test" class="embedly-card"> 
+                    require('promise-mix');
+                    const promise = Promise.resolve();
+                    promise._exists("Didn't find any data!")
+                        .catch(err => console.log("Error", err));
+                </div>
+                <br/><br/>
+                <h2 id="if-else" data-toc-text="&nbsp;&nbsp;IfElse">IfElse <code>1.7+</code></h2>
+                <p>Invokes the <code>check</code> <code>Function</code> passing it the down-stream: if the <code>check</code> returns <code>true</code> then executes the <code>ifOperation</code> and passes its result down-stream,
+                    <br/>otherwise it evaluates the <code>elseOperation</code> passing its result down-stream.</p>
+                <h3 id="if-else-chain" data-toc-text="&nbsp;&nbsp;promise._ifElse">promise._ifElse (chain) <code>1.7+</code></h3>
+                <h5><pre><code class="javascript">promise._ifElse(Function: check, Operation: ifOperation, Operation: elseOperation)</code></pre></h5>
+                <h5>Try yourself</h5>
+                <div id="if-else-test" class="embedly-card"> 
+                    require('promise-mix');
+                    const promise = Promise.resolve({ valid: false });
+                    promise._ifElse(data => data.valid, Promise.resolve("It was valid"), Promise.resolve("It was invalid!"))
+                        ._log("Was it valid?");
+                </div>
+                <br/><br/>
+                <h2 id="ignore" data-toc-text="&nbsp;&nbsp;Ignore">Ignore <code>1.7+</code></h2>
+                <p>Ignores any down-stream resolving with an empty value.</p>
+                <h3 id="ignore-chain" data-toc-text="&nbsp;&nbsp;promise._ignore">promise._ignore (chain) <code>1.7+</code></h3>
+                <h5><pre><code class="javascript">promise._ignore()</code></pre></h5>
+                <h5>Try yourself</h5>
+                <div id="ignore-test" class="embedly-card"> 
+                    require('promise-mix');
+                    const promise = Promise.resolve({ data: "Useless data", info: "Who cares info", errors: "I dont give a f**k" });
+                    promise._ignore()
+                        ._log("What's left?");
+                </div>
+                <br/><br/>
+                <h2 id="just" data-toc-text="&nbsp;&nbsp;Just">Just <code>1.7+</code></h2>
+                <p>Selects the field in the down-stream with the given name and passes just its value down-stream.</p>
+                <h3 id="just-chain" data-toc-text="&nbsp;&nbsp;promise._just">promise._just (chain) <code>1.7+</code></h3>
+                <h5><pre><code class="javascript">promise._just(String: keyName)</code></pre></h5>
+                <h5>Try yourself</h5>
+                <div id="just-test" class="embedly-card"> 
+                    require('promise-mix');
+                    const promise = Promise.resolve({ data: "Useless data", info: "Who cares info", errors: ["Oh noes!"] });
+                    promise._just('errors')
+                        ._log("Errors");
+                </div>
+                <br/><br/>
+                <h2 id="log" data-toc-text="&nbsp;&nbsp;Log">Log <code>1.7+</code></h2>
+                <p>Logs the down-stream value with a given tag.</p>
+                <h3>promise._log (chain) <code>1.7+</code></h3>
+                <h5><pre><code class="javascript">promise._log(String: logTag)</code></pre></h5>
+                <h5>Try yourself</h5>
+                <div id="log-test" class="embedly-card"> 
+                    require('promise-mix');
+                    const promise = Promise.resolve({ greeting: "Hello World!" });
+                    promise._log("Wander what he's saying...");
+                </div>
+                <br/><br/>
+                <h2>Loop <code>1.7+</code></h2>
+                <p>Iteratively invokes a <code>loop</code> <code>Function</code> passing it the incremental down-stream unitl a <code>break</code> <code>Function</code> returns <code>true</code>.</p>
+                <h3>promise._loop (chain) <code>1.7+</code></h3>
+                <h5><pre><code class="javascript">promise._loop(Function: loop, Function: break)</code></pre></h5>
+                <h5>Try yourself</h5>
+                <div id="loop-test" class="embedly-card"> 
+                    require('promise-mix');
+                    const promise = Promise.resolve({ data: [1, 5, 3, 15, 61, 8, 9, 14, 100, 7, 35, 21, 13] });
+                    promise._loop(data => {
+                        if(!data.current) {
+                            data.current = 0;
+                            data.min = Number.MAX_VALUE;
+                            data.max = Number.MIN_VALUE;
+                        };
+                        if(data.data[data.current] > data.max) data.max = data.data[data.current];
+                        if(data.data[data.current] < data.min) data.min = data.data[data.current];
+                        data.current++;
+                        return data;
+                    }, data => data.current == data.data.length)
+                    ._pick(['max', 'min'])
+                    ._log("Stats");
+                </div>
+                <br/><br/>
+                <h2>Map <code>1.7+</code></h2>
+                <p>Uses <code>Promise.mux</code> to split the down-stream in a collection of items and invokes the given <code>map</code> <code>Function</code> on each items, 
+                    <br/>then merges everything back assiging the mapped valued to the original keys.</p>
+                <h3>promise._map (chain) <code>1.7+</code></h3>
+                <h5><pre><code class="javascript">promise._map(Function: map)</code></pre></h5>
+                <h5>Try yourself</h5>
+                <div id="map-test" class="embedly-card"> 
+                    require('promise-mix');
+                    const promise = Promise.resolve({ increment_this: 1, decrement_this: 10, unexpected: 1 });
+                    promise._map(function(value) {
+                        if(this.key === 'increment_this') return ++value;
+                        if(this.key === 'decrement_this') return --value;
+                        return new Error(`Don't know what to do with this...`);
+                    })._log("Mapped");
+                </div>
+                <br/><br/>
+                <h2>Pick</h2>
+                <h2>Revive</h2>
+                <h2>Sleep</h2>
+                <h2>When</h2>
+            </div>
+        </div>
+    </div>
+    <!-- SCRIPTS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script>
+    <script src="../libs/highlight/highlight.pack.js"></script>
+    <script src="../libs/line-numbers/highlightjs-line-numbers.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <script>
+        (function(w, d){
+            var id='embedly-platform', n = 'script';
+            if (!d.getElementById(id)){
+            w.embedly = w.embedly || function() {(w.embedly.q = w.embedly.q || []).push(arguments);};
+            var e = d.createElement(n); e.id = id; e.async=1;
+            e.src = ('https:' === document.location.protocol ? 'https' : 'http') + '://cdn.embedly.com/widgets/platform.js';
+            var s = d.getElementsByTagName(n)[0];
+            s.parentNode.insertBefore(e, s);
+            }
+        })(window, document);
+    </script>
+</body>
+
+</html>

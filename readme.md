@@ -170,7 +170,7 @@ Extensions can now be concatenated with instance-specific functions: `_aggregate
 
 **1.5.X:** New Features:
 
-1. Added sone utility functions which can be useful to add expressivity to Promise chains and shorten some steps.
+1. Added some utility functions which can be useful to add expressivity to Promise chains and shorten some steps.
 
 2. Added `_filter` and `_shuffle` methods to muxed Promises. The `_filter` method accept a filtering function and sets to undefined all the filtered out downstreams (the function should return true for passing downstreams only). Chaining a `_clean()` after the `deMux` will finally remove the filtered-out undefined items from the downstream. The `_shuffle` method simply shuffles the Promises in the mux pool (be it an Array
 or an Object) and keeps the new shuffled pool for chaining.

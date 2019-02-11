@@ -79,4 +79,14 @@ describe('Test promise concatenation', () => {
         ._aside(stream => Promise.reject(`Aside from ${stream}`), true)
         .then(stream => stream.should.equal('Original'))
     );
+
+    it('should mix downstreams.', () => Promise.resolve({ me: 'Carlo' })
+        ._mix({ you: 'Jenny' })
+        .then( us => {
+            should.exist(us.me);
+            us.me.should.equal('Carlo');
+            should.exist(us.you);
+            us.you.should.equal('Jenny');
+            return;
+        } ));
 });

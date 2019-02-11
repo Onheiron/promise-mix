@@ -107,9 +107,11 @@ describe("Test promise logical operations", () => {
 
     it("should handle AND operation.", () => Promise.and([ // Both Resolve non-empty
         () => Promise.resolve("Andy"),
-        () => Promise.resolve("Sandy")
+        () => Promise.resolve("Sandy"),
+        () => Promise.resolve("Wendy"),
+        () => Promise.resolve("Mandy")
     ]).then(results => {
-        results.length.should.equal(2);
+        results.length.should.equal(4);
         results[1].should.equal("Sandy");
         return Promise.and([ // Both Resolve non-empty
             () => Promise.resolve("Andy"),
