@@ -58,7 +58,7 @@ describe("Test promise explosion", () => {
         (init, done) => done(null, init + 1),
         (step1, done) => done(null, step1 * 2),
         (step2, done) => done(null, step2 / 3)
-    ], [2, 5, 8]).then(function(result) {
+    ], [2, 5, 8]).then(function (result) {
         return `Result is ${result} for key ${this.key}`;
     }).deMux(reports => {
         should.exist(reports);
@@ -74,7 +74,7 @@ describe("Test promise explosion", () => {
             easy: 2,
             normal: 5,
             hard: 8
-        }).then(function(result) {
+        }).then(function (result) {
             return `Result is ${result} for ${this.key}`;
         }).deMux(reports => {
             should.exist(reports);
@@ -161,11 +161,9 @@ describe("Test promise explosion", () => {
         () => Promise.resolve("Selina")
     ], res => res.length > 4).deMux(results => {
         should.exist(results);
-        results.length.should.equal(2);
-        results[0].length.should.equal(2);
-        results[0][0].should.equal('Sandy');
-        results[1].length.should.equal(2);
-        results[1][0].should.equal('Wendy');
+        results.length.should.equal(4);
+        results[0].should.equal('Sandy');
+        results[2].should.equal('Wendy');
         return Promise.resolve();
     }));
 
@@ -187,6 +185,21 @@ describe("Test promise explosion", () => {
             names.length.should.equal(3);
         })
     );
+
+    it("should execute Promises in blocking sequence.", () => {
+        let start = Date.now();
+        return Promise.mux([0, 1, 2])
+            .then(item => Promise.resolve(item)
+                ._sleep(100)
+                ._aside(item => {
+                    const delta = Date.now() - start;
+                    const check = delta >= 100;
+                    check.should.equal(true);
+                    start = delta;
+                    return Promise.resolve(item);
+                }))
+            .deMux();
+    });
 
     it("should shuffle object Promises.", () => Promise.mux({
         wife: "Andy",
